@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Preferidos Helenio - V7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Silent+Asia&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --bg-list: #fdf6e3;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('https://i.ibb.co/RkzSkvmx/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 { 
+            font-family: 'Silent Asia', cursive;
+            color: var(--gold); 
+            font-size: 1.5rem;
+            margin-bottom: 5px; 
+            text-shadow: 2px 2px 2px rgba(0,0,0,0.8); 
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .links-list { 
+            list-style: none; padding: 10px; margin: 20px 0; 
+            max-height: 300px; overflow-y: auto; 
+            border-radius: 8px; background: var(--bg-list);
+            border: 1px solid #dcdcdc;
+        }
+
+        .link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e0d8c3;
+        }
+
+        .btn-action-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+
+        .backup-area { margin-top: 20px; padding: 15px; background: #eee; border-radius: 8px; }
+        textarea { width: 100%; height: 60px; margin: 10px 0; font-size: 10px; }
+        .btn-action { background: #34495e; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <h1>Sites preferidos Helenio</h1>
+    
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="siteName" placeholder="Nome">
+            <input type="text" id="siteUrl" placeholder="URL">
+            <button onclick="saveLink()" style="background: var(--success-color); color: white; border:none; padding:10px;">SALVAR</button>
+        </div>
+
+        <ul id="linksList" class="links-list"></ul>
+
+        <div class="backup-area">
+            <strong>Backup:</strong>
+            <textarea id="backupCode" placeholder="Código de backup"></textarea>
+            <button class="btn-action" onclick="generateBackup()">GERAR</button>
+            <button class="btn-action" onclick="restoreBackup()">RESTAURAR</button>
+        </div>
+    </div>
+
+    <script>
+        let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
+        let editIndex = -1;
+
+        function renderLinks() {
+            const list = document.getElementById('linksList');
+            list.innerHTML = '';
+            links.forEach((link, index) => {
+                const li = document.createElement('li');
+                li.className = 'link-item';
+                const translateUrl = `https://translate.google.com/translate?sl=auto&tl=pt&u=${encodeURIComponent(link.url)}`;
+                li.innerHTML = `
+                    <div><strong>${link.name}</strong><br><small>${link.url}</small></div>
+                    <div>
+                        <button class="btn-action-icon" onclick="window.open('${translateUrl}', '_blank')" title="Traduzir">🌐</button>
+                        <button class="btn-action-icon" onclick="editLink(${index})" title="Editar">✎</button>
+                        <button class="btn-action-icon" onclick="deleteLink(${index})" title="Excluir">✘</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function saveLink() {
+            let name = document.getElementById('siteName').value;
+            let url = document.getElementById('siteUrl').value;
+            if (!name || !url) return;
+            if (editIndex === -1) links.push({ name, url });
+            else { links[editIndex] = { name, url }; editIndex = -1; }
+            update();
+        }
+
+        function deleteLink(index) {
+            links.splice(index, 1);
+            update();
+        }
+
+        function editLink(index) {
+            document.getElementById('siteName').value = links[index].name;
+            document.getElementById('siteUrl').value = links[index].url;
+            editIndex = index;
+        }
+
+        function update() {
+            localStorage.setItem('helenio_links', JSON.stringify(links));
+            renderLinks();
+        }
+
+        function generateBackup() {
+            const code = btoa(JSON.stringify(links));
+            document.getElementById('backupCode').value = code;
+        }
+
+        function restoreBackup() {
+            try {
+                links = JSON.parse(atob(document.getElementById('backupCode').value));
+                update();
+            } catch(e) { alert("Código inválido"); }
+        }
+
+        renderLinks();
+    </script>
+</body>
+</html>
