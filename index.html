@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Preferidos Helenio - V14</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" type="image/svg+xml">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F5E7B2;
+            --bg-main: #fdf6e3;
+            --bg-container: rgba(255, 255, 255, 0.97);
+            --bg-input: #f9f6ee;
+            --success: #27ae60;
+            --success-hover: #219150;
+            --primary: #34495e;
+            --border: #e6ddc4;
+            --text-muted: #666;
+            --error: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #fdf6e3 0%, #fff8e8 100%);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 { 
+            font-family: 'Great Vibes', cursive;
+            color: var(--gold); 
+            font-size: 1.4rem;
+            margin: 4px 0 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-container);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+
+        /* Área de entrada ultra compacta */
+        .input-group {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: var(--bg-input);
+            border-radius: 5px;
+            border: 1px solid var(--border);
+        }
+
+        .input-group input {
+            flex: 1 1 110px;
+            padding: 5px 7px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            height: 30px;
+            background: #fff;
+        }
+
+        .input-group input:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2);
+        }
+
+        .input-group button {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: var(--success-hover);
+        }
+
+        /* Lista principal com máximo espaço */
+        .links-list { 
+            list-style: none; 
+            padding: 6px; 
+            margin: 0 0 8px; 
+            max-height: calc(100vh - 190px);
+            overflow-y: auto; 
+            border-radius: 6px; 
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+        }
+
+        .link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 6px;
+            border-bottom: 1px solid #eee3c8;
+            gap: 6px;
+            flex-wrap: wrap;
+            transition: background 0.2s;
+        }
+
+        .link-item:hover {
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        .link-info {
+            flex: 1;
+            min-width: 160px;
+            cursor: pointer;
+        }
+
+        .link-info strong {
+            color: var(--primary);
+            font-size: 0.9rem;
+            display: block;
+        }
+
+        .link-info small {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            word-break: break-all;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-action-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 17px;
+            padding: 3px 5px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .btn-action-icon:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+        /* Área de backup compacta */
+        .backup-area { 
+            padding: 8px; 
+            background: #f8f4e9; 
+            border-radius: 5px; 
+            border: 1px solid var(--border);
+        }
+
+        .backup-area strong {
+            font-size: 0.8rem;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 40px; 
+            margin: 4px 0; 
+            font-size: 0.78rem; 
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            resize: vertical;
+        }
+
+        .btn-action { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 5px 9px; 
+            cursor: pointer; 
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #2c3e50;
+        }
+
+        /* Barra de rolagem fina e suave */
+        .links-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .links-list::-webkit-scrollbar-track {
+            background: #f1e9d0;
+            border-radius: 3px;
+        }
+        .links-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 3px;
+        }
+        .links-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dark);
+        }
+
+        /* Responsividade */
+        @media (max-width: 450px) {
+            .input-group { flex-direction: column; gap: 4px; }
+            .input-group input, .input-group button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sites Preferidos Helenio</h1>
+    
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="siteName" placeholder="Nome do site">
+            <input type="text" id="siteUrl" placeholder="Endereço completo">
+            <button onclick="saveLink()" class="btn-save">Salvar</button>
+        </div>
+
+        <ul id="linksList" class="links-list"></ul>
+
+        <div class="backup-area">
+            <strong>Backup e restauração:</strong>
+            <textarea id="backupCode" placeholder="Código de backup"></textarea>
+            <button class="btn-action" onclick="generateBackup()">Gerar</button>
+            <button class="btn-action" onclick="restoreBackup()">Restaurar</button>
+        </div>
+    </div>
+
+    <script>
+        let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
+        let editIndex = -1;
+
+        // Ordena automaticamente por nome
+        function ordenarLinks() {
+            links.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
+        }
+
+        // Formata e verifica se a URL é válida
+        function formatUrl(url) {
+            url = url.trim();
+            if (!url) return '';
+            // Adiciona https se não tiver
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            // Verifica formato básico
+            const regex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/.*)?$/;
+            return regex.test(url) ? url : null;
+        }
+
+        function renderLinks() {
+            const list = document.getElementById('linksList');
+            list.innerHTML = '';
+            links.forEach((link, index) => {
+                const li = document.createElement('li');
+                li.className = 'link-item';
+                const translateUrl = `https://translate.google.com/translate?sl=auto&tl=pt&u=${encodeURIComponent(link.url)}`;
+                li.innerHTML = `
+                    <div class="link-info" onclick="window.open('${link.url}', '_blank')" title="Clique para abrir">
+                        <strong>${link.name}</strong>
+                        <small>${link.url}</small>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-action-icon" onclick="window.open('${translateUrl}', '_blank')" title="Traduzir página">🌐</button>
+                        <button class="btn-action-icon" onclick="editarLink(${index})" title="Editar">✎</button>
+                        <button class="btn-action-icon" onclick="excluirLink(${index})" title="Excluir">❌</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function excluirLink(index) {
+            if (confirm("Tem certeza que deseja excluir este site?")) {
+                links.splice(index, 1);
+                atualizarTudo();
+            }
+        }
+
+        function editarLink(index) {
+            document.getElementById('siteName').value = links[index].name;
+            document.getElementById('siteUrl').value = links[index].url;
+            editIndex = index;
+            document.querySelector('.btn-save').textContent = "Atualizar";
+        }
+
+        function saveLink() {
+            let name = document.getElementById('siteName').value.trim();
+            let url = document.getElementById('siteUrl').value.trim();
+
+            if (!name || !url) {
+                alert("Preencha o nome e o endereço!");
+                return;
+            }
+
+            const urlFormatada = formatUrl(url);
+            if (!urlFormatada) {
+                alert("Endereço inválido! Verifique se está correto.");
+                return;
+            }
+
+            // Verifica duplicidade
+            const nomeDuplicado = links.some((item, i) => 
+                item.name.toLowerCase() === name.toLowerCase() && i !== editIndex
+            );
+            if (nomeDuplicado) {
+                alert("Já existe um site com esse nome!");
+                return;
+            }
+
+            if (editIndex === -1) {
+                links.push({ name, url: urlFormatada });
+            } else {
+                links[editIndex] = { name, url: urlFormatada };
+                editIndex = -1;
+                document.querySelector('.btn-save').textContent = "Salvar";
+            }
+
+            atualizarTudo();
+            limparCampos();
+        }
+
+        function limparCampos() {
+            document.getElementById('siteName').value = "";
+            document.getElementById('siteUrl').value = "";
+        }
+
+        function atualizarTudo() {
+            ordenarLinks();
+            localStorage.setItem('helenio_links', JSON.stringify(links));
+            renderLinks();
+        }
+
+        function generateBackup() {
+            try {
+                const codigo = btoa(JSON.stringify(links));
+                document.getElementById('backupCode').value = codigo;
+                alert("Backup gerado com sucesso!");
+            } catch (e) {
+                alert("Erro ao gerar o backup.");
+            }
+        }
+
+        function restoreBackup() {
+            const codigo = document.getElementById('backupCode').value.trim();
+            if (!codigo) {
+                alert("Cole o código de backup antes de restaurar!");
+                return;
+            }
+
+            try {
+                const dados = JSON.parse(atob(codigo));
+                if (!Array.isArray(dados)) throw new Error();
+
+                if (confirm("Isso substituirá todos os sites atuais. Deseja continuar?")) {
+                    links = dados;
+                    atualizarTudo();
+                    alert("Backup restaurado com sucesso!");
+                }
+            } catch (e) {
+                alert("Código inválido ou corrompido.");
+            }
+        }
+
+        // Inicializa
+        atualizarTudo();
+    </script>
+</body>
+</html>
