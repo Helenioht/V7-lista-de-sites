@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Preferidos Helenio - V14</title>
+    <link rel="icon" href="https://i.ibb.co/p6j8M5Yh/icon.png" type="image/png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F5E7B2;
+            --bg-main: #fdf6e3;
+            --bg-container: rgba(255, 255, 255, 0.97);
+            --bg-input: #f9f6ee;
+            --success: #27ae60;
+            --success-hover: #219150;
+            --primary: #34495e;
+            --border: #e6ddc4;
+            --text-muted: #666;
+            --error: #c0392b;
+            --cloud: #2980b9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #fdf6e3 0%, #fff8e8 100%);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 { 
+            font-family: 'Great Vibes', cursive;
+            color: var(--gold); 
+            font-size: 1.4rem;
+            margin: 4px 0 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-container);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: 5px;
+            border: 1px solid var(--border);
+        }
+
+        .input-group input {
+            flex: 1 1 80px;
+            padding: 3px 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            height: 25px;
+            background: #fff;
+        }
+
+        .input-group button {
+            padding: 0 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            height: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-save { background: var(--success); color: white; }
+        .btn-save:hover { background: var(--success-hover); }
+
+        .links-list { 
+            list-style: none; padding: 6px; margin: 0 0 8px; 
+            max-height: calc(100vh - 210px); overflow-y: auto; 
+            border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border);
+        }
+
+        .link-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 7px 6px; border-bottom: 1px solid #eee3c8; gap: 6px; transition: background 0.2s;
+        }
+
+        .link-item:hover { background: rgba(212, 175, 55, 0.08); }
+        .link-info { flex: 1; cursor: pointer; }
+        .link-info strong { color: var(--primary); font-size: 0.9rem; display: block; }
+        .link-info small { color: var(--text-muted); font-size: 0.78rem; word-break: break-all; }
+        
+        .btn-action-icon { background: none; border: none; cursor: pointer; font-size: 17px; padding: 3px 5px; }
+        
+        .backup-area { padding: 8px; background: #f8f4e9; border-radius: 5px; border: 1px solid var(--border); }
+        .backup-area strong { font-size: 0.8rem; color: var(--primary); display: block; margin-bottom: 4px; }
+        textarea { width: 100%; height: 40px; margin: 4px 0; font-size: 0.78rem; padding: 5px; border: 1px solid #ccc; border-radius: 3px; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 3px 7px; cursor: pointer; border-radius: 3px; font-size: 0.75rem; margin-right: 2px; }
+        .btn-cloud { background: var(--cloud); color: white; }
+    </style>
+</head>
+<body>
+    <h1>Sites Preferidos Helenio</h1>
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="siteName" placeholder="Nome">
+            <input type="text" id="siteUrl" placeholder="URL">
+            <button onclick="saveLink()" class="btn-save">Salvar</button>
+        </div>
+        <ul id="linksList" class="links-list"></ul>
+        <div class="backup-area">
+            <strong>Backup e restauração:</strong>
+            <textarea id="backupCode" placeholder="Código de backup local ou ID do Bin obtido"></textarea>
+            <button class="btn-action" onclick="generateBackup()">Gerar Local</button>
+            <button class="btn-action" onclick="restoreBackup()">Restaurar Local</button>
+            <button class="btn-action btn-cloud" onclick="uploadToCloud()">Nuvem ⬆️</button>
+            <button class="btn-action btn-cloud" onclick="downloadFromCloud()">Nuvem ⬇️</button>
+        </div>
+    </div>
+    <script>
+        let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
+        let editIndex = -1;
+        
+        const apiKey = "$2a$10$G4lyy9OHvSKE5WxTrKa5b.KjJR7MoSJOFXDDQYqRxfjgLOB4/BExe";
+        const accessKey = "$2a$10$GH2GVM6At0oiDgHxdXyS4.v8BHoCW1HaSMcGz9PpzMxTW.WabnekK";
+        const binStorageKey = "helenio_jsonbin_id";
+
+        function ordenarLinks() { links.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })); }
+        function formatUrl(url) { url = url.trim(); if (!url) return ''; if (!url.startsWith('http')) url = 'https://' + url; const regex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/.*)?$/; return regex.test(url) ? url : null; }
+        
+        function renderLinks() {
+            const list = document.getElementById('linksList');
+            list.innerHTML = '';
+            links.forEach((link, index) => {
+                const li = document.createElement('li');
+                li.className = 'link-item';
+                li.innerHTML = `
+                    <div class="link-info" onclick="window.open('${link.url}', '_blank')">
+                        <strong>${link.name}</strong><small>${link.url}</small>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-action-icon" onclick="editarLink(${index})">✎</button>
+                        <button class="btn-action-icon" onclick="excluirLink(${index})">❌</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function excluirLink(index) { if (confirm("Excluir?")) { links.splice(index, 1); atualizarTudo(); } }
+        function editarLink(index) { document.getElementById('siteName').value = links[index].name; document.getElementById('siteUrl').value = links[index].url; editIndex = index; }
+        function saveLink() {
+            let name = document.getElementById('siteName').value.trim();
+            let url = formatUrl(document.getElementById('siteUrl').value);
+            if (!name || !url) return alert("Dados inválidos!");
+            if (editIndex === -1) links.push({ name, url }); else links[editIndex] = { name, url };
+            editIndex = -1;
+            atualizarTudo();
+            document.getElementById('siteName').value = ""; document.getElementById('siteUrl').value = "";
+        }
+        function atualizarTudo() { ordenarLinks(); localStorage.setItem('helenio_links', JSON.stringify(links)); renderLinks(); }
+        
+        function generateBackup() { document.getElementById('backupCode').value = btoa(JSON.stringify(links)); }
+        function restoreBackup() { try { links = JSON.parse(atob(document.getElementById('backupCode').value)); atualizarTudo(); } catch(e) { alert("Erro no formato local."); } }
+        
+        // Valida se a string corresponde ao formato padrão de ID do jsonbin (24 caracteres hexadecimais)
+        function isValidBinId(id) {
+            const jsonBinIdRegex = /^[a-f0-9]{24}$/i;
+            return jsonBinIdRegex.test(id);
+        }
+
+        async function uploadToCloud() {
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || "";
+            binId = binId.trim();
+
+            let url = "https://api.jsonbin.io/v3/b";
+            let method = "POST";
+            let headers = {
+                "Content-Type": "application/json",
+                "X-Master-Key": apiKey,
+                "X-Access-Key": accessKey
+            };
+
+            if (isValidBinId(binId)) {
+                url = `https://api.jsonbin.io/v3/b/${binId}`;
+                method = "PUT";
+            } else {
+                headers["X-Bin-Name"] = "helenio_links_backup";
+                headers["X-Bin-Private"] = "true";
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(links)
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let savedBinId = method === "POST" ? data.metadata.id : binId;
+                    localStorage.setItem(binStorageKey, savedBinId);
+                    document.getElementById('backupCode').value = savedBinId;
+                    alert("Backup salvo na nuvem com sucesso!");
+                } else {
+                    alert("Erro da API: " + (data.message || "Falha ao enviar"));
+                }
+            } catch (error) {
+                alert("Erro de conexão com a nuvem.");
+            }
+        }
+
+        async function downloadFromCloud() {
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || "";
+            binId = binId.trim();
+
+            if (!isValidBinId(binId)) {
+                return alert("Insira um ID de Bin válido (24 caracteres hexadecimais) na caixa de texto para baixar.");
+            }
+
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    method: "GET",
+                    headers: { 
+                        "X-Master-Key": apiKey,
+                        "X-Access-Key": accessKey
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (Array.isArray(data.record)) {
+                        links = data.record;
+                        atualizarTudo();
+                        localStorage.setItem(binStorageKey, binId);
+                        document.getElementById('backupCode').value = binId;
+                        alert("Backup sincronizado da nuvem!");
+                    } else {
+                        alert("Formato de dados recebido é inválido.");
+                    }
+                } else {
+                    alert("Erro ao buscar dados: " + (data.message || "ID incorreto."));
+                }
+            } catch (error) {
+                alert("Erro de conexão ao baixar dados.");
+            }
+        }
+        
+        const inicialId = localStorage.getItem(binStorageKey);
+        if(inicialId && isValidBinId(inicialId.trim())) { 
+            document.getElementById('backupCode').value = inicialId.trim(); 
+        }
+
+        atualizarTudo();
+    </script>
+</body>
+</html>
