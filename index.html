@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Preferidos Helenio</title>
+    <link rel="icon" href="https://i.ibb.co/p6j8M5Yh/icon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F5E7B2;
+            --gold-dark: #B8960C;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+            --bg-main: #0f0f1a;
+            --bg-card: rgba(30, 30, 50, 0.85);
+            --bg-card-hover: rgba(40, 40, 65, 0.9);
+            --bg-input: rgba(255, 255, 255, 0.05);
+            --success: #2ecc71;
+            --success-hover: #27ae60;
+            --danger: #e74c3c;
+            --danger-hover: #c0392b;
+            --primary: #7b8fa1;
+            --border: rgba(212, 175, 55, 0.2);
+            --text-main: #e8e6e3;
+            --text-muted: #a0a0b0;
+            --text-dim: #6b6b7b;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 20px 12px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Estilização explícita de foco para navegação por Controle Remoto / D-Pad */
+        :focus {
+            outline: 3px solid var(--gold) !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 12px var(--gold-glow) !important;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            50% { transform: translateY(-10vh) rotate(180deg); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .profile-img {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), 0 4px 15px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .profile-wrapper:hover .profile-img {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 6px 20px rgba(0,0,0,0.4);
+        }
+        .profile-ring {
+            position: absolute;
+            top: -6px; left: -6px;
+            width: 102px; height: 102px;
+            border: 2px solid transparent;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--gold);
+            font-size: 2.2rem;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+        .form-title {
+            font-size: 0.9rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .input-wrapper {
+            flex: 1;
+            min-width: 140px;
+            position: relative;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px 10px 34px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            background: var(--bg-input);
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .input-group input:focus {
+            background: rgba(255,255,255,0.08);
+        }
+        .input-group input::placeholder { color: var(--text-dim); }
+
+        .btn-primary {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #0f0f1a;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+        .btn-primary:active { transform: translateY(0); }
+
+        .links-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        .links-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .links-title {
+            font-size: 0.9rem;
+            color: var(--gold);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .links-list {
+            list-style: none;
+            max-height: 55vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .links-list::-webkit-scrollbar { width: 4px; }
+        .links-list::-webkit-scrollbar-track { background: transparent; }
+        .links-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .links-list::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .link-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--gold);
+            border-radius: 0 3px 3px 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .link-item:hover, .link-item:focus {
+            background: var(--bg-card-hover);
+            border-color: rgba(212, 175, 55, 0.15);
+            transform: translateX(4px);
+        }
+        .link-item:hover::before, .link-item:focus::before { opacity: 1; }
+
+        .link-favicon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .link-favicon i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+        .link-favicon img {
+            width: 20px; height: 20px;
+            border-radius: 4px;
+        }
+
+        .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .link-name {
+            color: var(--text-main);
+            font-size: 0.92rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .link-url {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .link-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 1; /* Visibilidade mantida para facilitar navegação via controle */
+            transition: opacity 0.2s ease;
+        }
+        .btn-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+        .btn-icon:hover, .btn-icon:focus {
+            background: rgba(255,255,255,0.08);
+            color: var(--gold);
+        }
+        .btn-icon.delete:hover, .btn-icon.delete:focus {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--border);
+            margin-bottom: 12px;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        .backup-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+        .backup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .backup-title {
+            font-size: 0.9rem;
+            color: var(--gold);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .backup-status {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .backup-status.offline {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .backup-input-group {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .backup-input-group textarea {
+            width: 100%;
+            height: 50px;
+            padding: 10px 40px 10px 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            color: var(--text-main);
+            resize: none;
+            font-family: 'Inter', monospace;
+            transition: all 0.3s ease;
+        }
+        .backup-input-group .copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .backup-input-group .copy-btn:hover, .backup-input-group .copy-btn:focus {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+        }
+
+        .backup-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+        .btn-action:hover, .btn-action:focus {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+        .btn-action.primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #0f0f1a;
+            border: none;
+            font-weight: 600;
+        }
+        .btn-action.primary:hover, .btn-action.primary:focus {
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-action.danger {
+            border-color: rgba(231, 76, 60, 0.3);
+            color: var(--danger);
+        }
+        .btn-action.danger:hover, .btn-action.danger:focus {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            max-width: 320px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(20px); }
+        }
+        .toast i { font-size: 1rem; }
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--danger); }
+        .toast.info i { color: var(--gold); }
+        .toast-text { font-size: 0.85rem; color: var(--text-main); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            max-width: 360px;
+            width: 90%;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-title {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .modal-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            padding: 16px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+        .footer i { color: var(--danger); }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+            .profile-img { width: 70px; height: 70px; }
+            .profile-ring { width: 82px; height: 82px; top: -6px; left: -6px; }
+            .input-group { flex-direction: column; }
+            .input-wrapper { min-width: 100%; }
+            .btn-primary { width: 100%; justify-content: center; }
+            .link-actions { opacity: 1; }
+            .backup-buttons { justify-content: center; }
+            .backup-buttons .btn-action { flex: 1; justify-content: center; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle">Confirmar</div>
+            <div class="modal-text" id="modalText">Tem certeza?</div>
+            <div class="modal-buttons">
+                <button class="btn-action" tabindex="0" onclick="closeModal()">Cancelar</button>
+                <button class="btn-action danger" tabindex="0" id="modalConfirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <header class="header fade-in">
+        <div class="profile-wrapper">
+            <div class="profile-ring"></div>
+            <img src="https://i.ibb.co/n8Dvmqbr/photo-1738003366938-d5af91b55f36.jpg" alt="Foto de Helenio" class="profile-img">
+        </div>
+        <h1>Sites Preferidos Helenio</h1>
+        <p class="subtitle">Seus links favoritos, sempre a mao</p>
+    </header>
+
+    <main class="container">
+        <div class="form-card fade-in">
+            <div class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                <span id="formTitleText">Adicionar Novo Link</span>
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-tag"></i>
+                    <input type="text" id="siteName" tabindex="0" placeholder="Nome do site">
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-link"></i>
+                    <input type="url" id="siteUrl" tabindex="0" placeholder="https://exemplo.com">
+                </div>
+                <button class="btn-primary" id="btnSave" tabindex="0" onclick="saveLink()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+
+        <div class="links-container fade-in">
+            <div class="links-header">
+                <div class="links-title">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Meus Links</span>
+                </div>
+            </div>
+            <ul class="links-list" id="linksList">
+                <!-- Links renderizados via JS -->
+            </ul>
+        </div>
+
+        <div class="backup-card fade-in">
+            <div class="backup-header">
+                <div class="backup-title">
+                    <i class="fas fa-database"></i>
+                    <span>Backup e Sincronização</span>
+                </div>
+                <div class="backup-status" id="backupStatus">
+                    <i class="fas fa-check-circle"></i> Sincronizado
+                </div>
+            </div>
+            <div class="backup-input-group">
+                <textarea id="backupData" tabindex="0" readonly placeholder="Dados de backup..."></textarea>
+                <button class="copy-btn" tabindex="0" onclick="copyBackup()" title="Copiar Backup">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="backup-buttons">
+                <button class="btn-action primary" tabindex="0" onclick="exportBackup()">
+                    <i class="fas fa-download"></i> Gerar Backup
+                </button>
+                <button class="btn-action" tabindex="0" onclick="importBackup()">
+                    <i class="fas fa-upload"></i> Importar Backup
+                </button>
+                <button class="btn-action danger" tabindex="0" onclick="confirmClearAll()">
+                    <i class="fas fa-trash"></i> Limpar Tudo
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Desenvolvido para Smart TV & Mobile</p>
+    </footer>
+
+    <script>
+        // Mapeamento e Gerenciamento do Controle Remoto (TV TCL / Android TV)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Força o foco no primeiro campo ao carregar
+            const firstInput = document.getElementById('siteName');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            const keyCode = event.keyCode;
+
+            // Tratamento do botão OK / Enter
+            if (keyCode === 13) {
+                const activeEl = document.activeElement;
+                if (activeEl && activeEl.tagName !== 'INPUT' && activeEl.tagName !== 'TEXTAREA') {
+                    activeEl.click();
+                }
+            }
+
+            // Tratamento do botão Voltar / Esc / Backspace da Smart TV
+            if (keyCode === 27 || keyCode === 8 || keyCode === 10009 || keyCode === 461) {
+                const modal = document.getElementById('confirmModal');
+                if (modal && modal.classList.contains('active')) {
+                    event.preventDefault();
+                    closeModal();
+                }
+            }
+        });
+
+        // Funções auxiliares fictícias de interface (mantenha a lógica de persistência do seu app)
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        function saveLink() {
+            // Lógica de salvar link
+        }
+
+        function copyBackup() {
+            // Lógica de copiar backup
+        }
+
+        function exportBackup() {
+            // Lógica de exportar
+        }
+
+        function importBackup() {
+            // Lógica de importar
+        }
+
+        function confirmClearAll() {
+            document.getElementById('confirmModal').classList.add('active');
+        }
+    </script>
+</body>
+</html>
