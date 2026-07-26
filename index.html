@@ -44,11 +44,24 @@
             overflow-x: hidden;
         }
 
-        /* Estilização explícita de foco para navegação por Controle Remoto / D-Pad */
+        /* Destaque para navegação por controle remoto */
         :focus {
+            outline: none;
+        }
+
+        :focus-visible,
+        .link-item:focus,
+        .btn-primary:focus,
+        .btn-action:focus,
+        .btn-icon:focus,
+        .copy-btn:focus,
+        input:focus,
+        textarea:focus {
             outline: 3px solid var(--gold) !important;
             outline-offset: 2px !important;
-            box-shadow: 0 0 12px var(--gold-glow) !important;
+            box-shadow: 0 0 15px var(--gold-glow) !important;
+            transform: scale(1.02);
+            transition: all 0.2s ease;
         }
 
         .particles {
@@ -196,7 +209,7 @@
             gap: 6px;
             white-space: nowrap;
         }
-        .btn-primary:hover, .btn-primary:focus {
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         }
@@ -265,7 +278,6 @@
         .link-item:hover, .link-item:focus {
             background: var(--bg-card-hover);
             border-color: rgba(212, 175, 55, 0.15);
-            transform: translateX(4px);
         }
         .link-item:hover::before, .link-item:focus::before { opacity: 1; }
 
@@ -312,9 +324,10 @@
         .link-actions {
             display: flex;
             gap: 4px;
-            opacity: 1; /* Visibilidade mantida para facilitar navegação via controle */
+            opacity: 1;
             transition: opacity 0.2s ease;
         }
+
         .btn-icon {
             width: 32px; height: 32px;
             border-radius: 8px;
@@ -424,7 +437,8 @@
             font-size: 0.8rem;
             transition: all 0.2s;
         }
-        .backup-input-group .copy-btn:hover, .backup-input-group .copy-btn:focus {
+        .backup-input-group .copy-btn:hover,
+        .backup-input-group .copy-btn:focus {
             background: rgba(212, 175, 55, 0.2);
             color: var(--gold);
         }
@@ -570,7 +584,6 @@
             .input-group { flex-direction: column; }
             .input-wrapper { min-width: 100%; }
             .btn-primary { width: 100%; justify-content: center; }
-            .link-actions { opacity: 1; }
             .backup-buttons { justify-content: center; }
             .backup-buttons .btn-action { flex: 1; justify-content: center; }
         }
@@ -594,8 +607,8 @@
             <div class="modal-title" id="modalTitle">Confirmar</div>
             <div class="modal-text" id="modalText">Tem certeza?</div>
             <div class="modal-buttons">
-                <button class="btn-action" tabindex="0" onclick="closeModal()">Cancelar</button>
-                <button class="btn-action danger" tabindex="0" id="modalConfirmBtn">Confirmar</button>
+                <button class="btn-action" id="modalCancelBtn" onclick="closeModal()">Cancelar</button>
+                <button class="btn-action danger" id="modalConfirmBtn">Confirmar</button>
             </div>
         </div>
     </div>
@@ -606,7 +619,7 @@
             <img src="https://i.ibb.co/n8Dvmqbr/photo-1738003366938-d5af91b55f36.jpg" alt="Foto de Helenio" class="profile-img">
         </div>
         <h1>Sites Preferidos Helenio</h1>
-        <p class="subtitle">Seus links favoritos, sempre a mao</p>
+        <p class="subtitle">Seus links favoritos, sempre a mão</p>
     </header>
 
     <main class="container">
@@ -618,14 +631,19 @@
             <div class="input-group">
                 <div class="input-wrapper">
                     <i class="fas fa-tag"></i>
-                    <input type="text" id="siteName" tabindex="0" placeholder="Nome do site">
+                    <input type="text" id="siteName" placeholder="Nome do site" tabindex="0">
                 </div>
                 <div class="input-wrapper">
                     <i class="fas fa-link"></i>
-                    <input type="url" id="siteUrl" tabindex="0" placeholder="https://exemplo.com">
+                    <input type="text" id="siteUrl" placeholder="URL do site" tabindex="0">
                 </div>
-                <button class="btn-primary" id="btnSave" tabindex="0" onclick="saveLink()">
-                    <i class="fas fa-save"></i> Salvar
+                <button onclick="saveLink()" class="btn-primary" id="saveBtn" tabindex="0">
+                    <i class="fas fa-save"></i>
+                    <span id="saveBtnText">Salvar</span>
+                </button>
+                <button onclick="cancelEdit()" class="btn-action" id="cancelBtn" tabindex="0" style="display:none;">
+                    <i class="fas fa-times"></i>
+                    Cancelar
                 </button>
             </div>
         </div>
@@ -634,102 +652,474 @@
             <div class="links-header">
                 <div class="links-title">
                     <i class="fas fa-bookmark"></i>
-                    <span>Meus Links</span>
+                    Meus Links
                 </div>
             </div>
-            <ul class="links-list" id="linksList">
-                <!-- Links renderizados via JS -->
-            </ul>
+            <ul id="linksList" class="links-list"></ul>
         </div>
 
         <div class="backup-card fade-in">
             <div class="backup-header">
                 <div class="backup-title">
-                    <i class="fas fa-database"></i>
-                    <span>Backup e Sincronização</span>
+                    <i class="fas fa-cloud"></i>
+                    Backup e Restauração
                 </div>
-                <div class="backup-status" id="backupStatus">
-                    <i class="fas fa-check-circle"></i> Sincronizado
-                </div>
+                <span class="backup-status" id="backupStatus">
+                    <i class="fas fa-check-circle"></i> Pronto
+                </span>
             </div>
             <div class="backup-input-group">
-                <textarea id="backupData" tabindex="0" readonly placeholder="Dados de backup..."></textarea>
-                <button class="copy-btn" tabindex="0" onclick="copyBackup()" title="Copiar Backup">
+                <textarea id="backupCode" placeholder="Cole o código de backup ou ID da nuvem aqui..." tabindex="0"></textarea>
+                <button class="copy-btn" onclick="copyBackupCode()" title="Copiar" tabindex="0">
                     <i class="fas fa-copy"></i>
                 </button>
             </div>
             <div class="backup-buttons">
-                <button class="btn-action primary" tabindex="0" onclick="exportBackup()">
-                    <i class="fas fa-download"></i> Gerar Backup
+                <button class="btn-action" onclick="generateBackup()" tabindex="0">
+                    <i class="fas fa-download"></i> Gerar Local
                 </button>
-                <button class="btn-action" tabindex="0" onclick="importBackup()">
-                    <i class="fas fa-upload"></i> Importar Backup
+                <button class="btn-action" onclick="restoreBackup()" tabindex="0">
+                    <i class="fas fa-upload"></i> Restaurar Local
                 </button>
-                <button class="btn-action danger" tabindex="0" onclick="confirmClearAll()">
-                    <i class="fas fa-trash"></i> Limpar Tudo
+                <button class="btn-action primary" onclick="uploadToCloud()" tabindex="0">
+                    <i class="fas fa-cloud-upload-alt"></i> Enviar Nuvem
+                </button>
+                <button class="btn-action primary" onclick="downloadFromCloud()" tabindex="0">
+                    <i class="fas fa-cloud-download-alt"></i> Baixar Nuvem
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <p>Desenvolvido para Smart TV & Mobile</p>
+    <footer class="footer fade-in">
+        <p>Feito com <i class="fas fa-heart"></i> para Helenio</p>
     </footer>
 
     <script>
-        // Mapeamento e Gerenciamento do Controle Remoto (TV TCL / Android TV)
+        let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
+        let editIndex = -1;
+
+        const apiKey = "$2a$10$G4lyy9OHvSKE5WxTrKa5b.KjJR7MoSJOFXDDQYqRxfjgLOB4/BExe";
+        const accessKey = "$2a$10$GH2GVM6At0oiDgHxdXyS4.v8BHoCW1HaSMcGz9PpzMxTW.WabnekK";
+        const binStorageKey = "helenio_jsonbin_id";
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Força o foco no primeiro campo ao carregar
-            const firstInput = document.getElementById('siteName');
-            if (firstInput) {
-                firstInput.focus();
+            createParticles();
+            atualizarTudo();
+
+            const inicialId = localStorage.getItem(binStorageKey);
+            if (inicialId && isValidBinId(inicialId.trim())) {
+                document.getElementById('backupCode').value = inicialId.trim();
             }
+
+            // Suporte para teclas do controle remoto TCL (D-Pad / Teclado)
+            document.addEventListener('keydown', handleRemoteKeys);
         });
 
-        document.addEventListener('keydown', (event) => {
-            const keyCode = event.keyCode;
+        function handleRemoteKeys(e) {
+            const key = e.key || e.keyCode;
+            const isModalActive = document.getElementById('confirmModal').classList.contains('active');
 
-            // Tratamento do botão OK / Enter
-            if (keyCode === 13) {
-                const activeEl = document.activeElement;
-                if (activeEl && activeEl.tagName !== 'INPUT' && activeEl.tagName !== 'TEXTAREA') {
-                    activeEl.click();
-                }
-            }
-
-            // Tratamento do botão Voltar / Esc / Backspace da Smart TV
-            if (keyCode === 27 || keyCode === 8 || keyCode === 10009 || keyCode === 461) {
-                const modal = document.getElementById('confirmModal');
-                if (modal && modal.classList.contains('active')) {
-                    event.preventDefault();
+            // Tecla Voltar / Escape no Controle Remoto
+            if (key === 'Escape' || key === 'Back' || key === 10009 || key === 27 || key === 461) {
+                if (isModalActive) {
                     closeModal();
+                    e.preventDefault();
+                } else if (editIndex !== -1) {
+                    cancelEdit();
+                    e.preventDefault();
+                }
+                return;
+            }
+
+            // Ação da tecla Enter/OK no controle remoto quando focando em item de lista ou botão
+            if (key === 'Enter' || key === 13) {
+                const active = document.activeElement;
+                if (active && active.classList.contains('link-item')) {
+                    const url = active.getAttribute('data-url');
+                    if (url) openLink(url);
                 }
             }
-        });
 
-        // Funções auxiliares fictícias de interface (mantenha a lógica de persistência do seu app)
+            // Rolagem suave automática para manter elemento focado visível no controle
+            setTimeout(() => {
+                const active = document.activeElement;
+                if (active && typeof active.scrollIntoView === 'function') {
+                    active.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 50);
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 15 + 's';
+                p.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(p);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            toast.innerHTML = `
+                <i class="fas ${icons[type] || icons.info}"></i>
+                <span class="toast-text">${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        let modalCallback = null;
+        function showModal(title, text, confirmText, callback) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalText').textContent = text;
+            document.getElementById('modalConfirmBtn').textContent = confirmText;
+            modalCallback = callback;
+            document.getElementById('confirmModal').classList.add('active');
+            
+            // Focar o botão de confirmação para ação rápida no controle remoto
+            setTimeout(() => {
+                document.getElementById('modalConfirmBtn').focus();
+            }, 100);
+        }
+
         function closeModal() {
             document.getElementById('confirmModal').classList.remove('active');
+            modalCallback = null;
+        }
+
+        document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+            if (modalCallback) modalCallback();
+            closeModal();
+        });
+
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('confirmModal')) closeModal();
+        });
+
+        function formatUrl(url) {
+            url = url.trim();
+            if (!url) return '';
+            if (!url.startsWith('http')) url = 'https://' + url;
+            const regex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/.*)?$/;
+            return regex.test(url) ? url : null;
+        }
+
+        function isValidBinId(id) {
+            return /^[a-f0-9]{24}$/i.test(id);
+        }
+
+        function getDomain(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname.replace('www.', '');
+            } catch {
+                return url;
+            }
+        }
+
+        function getFaviconUrl(url) {
+            try {
+                const domain = getDomain(url);
+                return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+            } catch {
+                return null;
+            }
+        }
+
+        function ordenarLinks() {
+            links.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
+        }
+
+        function renderLinks() {
+            const list = document.getElementById('linksList');
+
+            if (links.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bookmark"></i>
+                        <p>Nenhum link salvo ainda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = '';
+            links.forEach((link, index) => {
+                const favicon = getFaviconUrl(link.url);
+                const li = document.createElement('li');
+                li.className = 'link-item';
+                li.setAttribute('tabindex', '0');
+                li.setAttribute('data-url', link.url);
+                li.innerHTML = `
+                    <div class="link-favicon">
+                        ${favicon ? `<img src="${favicon}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas fa-globe\'></i>'">` : '<i class="fas fa-globe"></i>'}
+                    </div>
+                    <div class="link-info" onclick="openLink('${link.url}')">
+                        <div class="link-name">${escapeHtml(link.name)}</div>
+                        <div class="link-url">${escapeHtml(getDomain(link.url))}</div>
+                    </div>
+                    <div class="link-actions">
+                        <button class="btn-icon" onclick="event.stopPropagation(); editarLink(${index})" title="Editar" tabindex="0">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="btn-icon delete" onclick="event.stopPropagation(); confirmDelete(${index})" title="Excluir" tabindex="0">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                li.addEventListener('click', (e) => {
+                    if (!e.target.closest('.btn-icon')) {
+                        openLink(link.url);
+                    }
+                });
+
+                list.appendChild(li);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function openLink(url) {
+            window.open(url, '_blank');
         }
 
         function saveLink() {
-            // Lógica de salvar link
+            const nameInput = document.getElementById('siteName');
+            const urlInput = document.getElementById('siteUrl');
+            let name = nameInput.value.trim();
+            let url = formatUrl(urlInput.value);
+
+            if (!name || !url) {
+                showToast('Preencha nome e URL válidos!', 'error');
+                return;
+            }
+
+            const duplicateIndex = links.findIndex((l, i) => 
+                l.url === url && i !== editIndex
+            );
+            if (duplicateIndex !== -1) {
+                showToast('Este link já existe!', 'error');
+                return;
+            }
+
+            const linkData = { name, url, timestamp: Date.now() };
+
+            if (editIndex === -1) {
+                links.push(linkData);
+                showToast('Link adicionado com sucesso!');
+            } else {
+                links[editIndex] = { ...links[editIndex], ...linkData };
+                showToast('Link atualizado com sucesso!');
+            }
+
+            editIndex = -1;
+            resetForm();
+            atualizarTudo();
         }
 
-        function copyBackup() {
-            // Lógica de copiar backup
+        function editarLink(index) {
+            document.getElementById('siteName').value = links[index].name;
+            document.getElementById('siteUrl').value = links[index].url;
+            editIndex = index;
+            document.getElementById('formTitleText').textContent = 'Editar Link';
+            document.getElementById('saveBtnText').textContent = 'Atualizar';
+            document.getElementById('cancelBtn').style.display = 'flex';
+            document.getElementById('siteName').focus();
         }
 
-        function exportBackup() {
-            // Lógica de exportar
+        function cancelEdit() {
+            editIndex = -1;
+            resetForm();
         }
 
-        function importBackup() {
-            // Lógica de importar
+        function resetForm() {
+            document.getElementById('siteName').value = '';
+            document.getElementById('siteUrl').value = '';
+            document.getElementById('formTitleText').textContent = 'Adicionar Novo Link';
+            document.getElementById('saveBtnText').textContent = 'Salvar';
+            document.getElementById('cancelBtn').style.display = 'none';
         }
 
-        function confirmClearAll() {
-            document.getElementById('confirmModal').classList.add('active');
+        function confirmDelete(index) {
+            showModal(
+                'Excluir Link',
+                `Tem certeza que deseja excluir "${links[index].name}"?`,
+                'Excluir',
+                () => { excluirLink(index); }
+            );
+        }
+
+        function excluirLink(index) {
+            links.splice(index, 1);
+            atualizarTudo();
+            showToast('Link excluído!');
+        }
+
+        function atualizarTudo() {
+            ordenarLinks();
+            localStorage.setItem('helenio_links', JSON.stringify(links));
+            localStorage.setItem('helenio_last_save', new Date().toISOString());
+            renderLinks();
+        }
+
+        function generateBackup() {
+            if (links.length === 0) {
+                showToast('Não há links para exportar', 'info');
+                return;
+            }
+            const code = btoa(JSON.stringify(links));
+            document.getElementById('backupCode').value = code;
+            showToast('Código de backup gerado! Copie e guarde com segurança.');
+        }
+
+        function restoreBackup() {
+            const code = document.getElementById('backupCode').value.trim();
+            if (!code) {
+                showToast('Cole um código de backup primeiro!', 'error');
+                return;
+            }
+            try {
+                const restored = JSON.parse(atob(code));
+                if (!Array.isArray(restored)) throw new Error('Formato inválido');
+
+                showModal(
+                    'Restaurar Backup',
+                    `Restaurar ${restored.length} links? Os links atuais serão substituídos.`,
+                    'Restaurar',
+                    () => {
+                        links = restored.map(l => ({ ...l, timestamp: l.timestamp || Date.now() }));
+                        atualizarTudo();
+                        showToast('Backup restaurado com sucesso!');
+                    }
+                );
+            } catch (e) {
+                showToast('Código de backup inválido!', 'error');
+            }
+        }
+
+        function copyBackupCode() {
+            const textarea = document.getElementById('backupCode');
+            if (!textarea.value) {
+                showToast('Nada para copiar', 'info');
+                return;
+            }
+            textarea.select();
+            document.execCommand('copy');
+            showToast('Código copiado para a área de transferência!');
+        }
+
+        async function uploadToCloud() {
+            const backupStatus = document.getElementById('backupStatus');
+            backupStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            backupStatus.className = 'backup-status';
+
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || "";
+            binId = binId.trim();
+
+            let url = "https://api.jsonbin.io/v3/b";
+            let method = "POST";
+            let headers = {
+                "Content-Type": "application/json",
+                "X-Master-Key": apiKey,
+                "X-Access-Key": accessKey
+            };
+
+            if (isValidBinId(binId)) {
+                url = `https://api.jsonbin.io/v3/b/${binId}`;
+                method = "PUT";
+            } else {
+                headers["X-Bin-Name"] = "helenio_links_backup";
+                headers["X-Bin-Private"] = "true";
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(links)
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    let savedBinId = method === "POST" ? data.metadata.id : binId;
+                    localStorage.setItem(binStorageKey, savedBinId);
+                    document.getElementById('backupCode').value = savedBinId;
+                    backupStatus.innerHTML = '<i class="fas fa-check-circle"></i> Sincronizado';
+                    backupStatus.className = 'backup-status';
+                    showToast('Backup salvo na nuvem com sucesso!');
+                } else {
+                    backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Erro';
+                    backupStatus.className = 'backup-status offline';
+                    showToast('Erro da API: ' + (data.message || "Falha ao enviar"), 'error');
+                }
+            } catch (error) {
+                backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Offline';
+                backupStatus.className = 'backup-status offline';
+                showToast('Erro de conexão com a nuvem.', 'error');
+            }
+        }
+
+        async function downloadFromCloud() {
+            const backupStatus = document.getElementById('backupStatus');
+            backupStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
+            backupStatus.className = 'backup-status';
+
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || "";
+            binId = binId.trim();
+
+            if (!isValidBinId(binId)) {
+                backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Inválido';
+                backupStatus.className = 'backup-status offline';
+                showToast('Insira um ID de Bin válido (24 caracteres hexadecimais)', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    method: "GET",
+                    headers: {
+                        "X-Master-Key": apiKey,
+                        "X-Access-Key": accessKey
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (Array.isArray(data.record)) {
+                        links = data.record.map(l => ({ ...l, timestamp: l.timestamp || Date.now() }));
+                        atualizarTudo();
+                        localStorage.setItem(binStorageKey, binId);
+                        document.getElementById('backupCode').value = binId;
+                        backupStatus.innerHTML = '<i class="fas fa-check-circle"></i> Sincronizado';
+                        backupStatus.className = 'backup-status';
+                        showToast('Backup sincronizado da nuvem!');
+                    } else {
+                        backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Erro';
+                        backupStatus.className = 'backup-status offline';
+                        showToast('Formato de dados inválido.', 'error');
+                    }
+                } else {
+                    backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Erro';
+                    backupStatus.className = 'backup-status offline';
+                    showToast('Erro ao buscar dados: ' + (data.message || "ID incorreto."), 'error');
+                }
+            } catch (error) {
+                backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Offline';
+                backupStatus.className = 'backup-status offline';
+                showToast('Erro de conexão ao baixar dados.', 'error');
+            }
         }
     </script>
 </body>
