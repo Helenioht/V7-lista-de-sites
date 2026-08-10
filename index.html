@@ -608,7 +608,7 @@
             <img src="https://i.ibb.co/n8Dvmqbr/photo-1738003366938-d5af91b55f36.jpg" alt="Foto de Helenio" class="profile-img">
         </div>
         <h1>Sites Preferidos Helenio</h1>
-        <p class="subtitle">Seus links favoritos, sempre a mao</p>
+        <p class="subtitle">Seus links favoritos, sempre a mão</p>
     </header>
 
     <main class="container">
@@ -651,14 +651,14 @@
             <div class="backup-header">
                 <div class="backup-title">
                     <i class="fas fa-cloud"></i>
-                    Backup e Restauracao
+                    Backup e Restauração
                 </div>
                 <span class="backup-status" id="backupStatus">
                     <i class="fas fa-check-circle"></i> Pronto
                 </span>
             </div>
             <div class="backup-input-group">
-                <textarea id="backupCode" placeholder="Cole o codigo de backup ou ID da nuvem aqui..."></textarea>
+                <textarea id="backupCode" placeholder="Cole o código de backup ou ID da nuvem aqui..."></textarea>
                 <button class="copy-btn" onclick="copyBackupCode()" title="Copiar">
                     <i class="fas fa-copy"></i>
                 </button>
@@ -688,8 +688,9 @@
         let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
         let editIndex = -1;
 
-        const apiKey = "$2a$10$G4lyy9OHvSKE5WxTrKa5b.KjJR7MoSJOFXDDQYqRxfjgLOB4/BExe";
-        const accessKey = "$2a$10$GH2GVM6At0oiDgHxdXyS4.v8BHoCW1HaSMcGz9PpzMxTW.WabnekK";
+        // Chaves de autenticação atualizadas
+        const apiKey = "$2a$10$cXJaZGoiDlDf7aL8aIElD.WznNlzWQYC9hyoDRXLZaEmGPiYV6lGS";
+        const accessKey = "$2a$10$aYr1XrR5N.6GChZPrzPn3uXL8PLlNVja0dWs4JCUWm7ynfGtO33tm";
         const binStorageKey = "helenio_jsonbin_id";
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -841,7 +842,7 @@
             let url = formatUrl(urlInput.value);
 
             if (!name || !url) {
-                showToast('Preencha nome e URL validos!', 'error');
+                showToast('Preencha nome e URL válidos!', 'error');
                 return;
             }
 
@@ -849,7 +850,7 @@
                 l.url === url && i !== editIndex
             );
             if (duplicateIndex !== -1) {
-                showToast('Este link ja existe!', 'error');
+                showToast('Este link já existe!', 'error');
                 return;
             }
 
@@ -903,7 +904,7 @@
         function excluirLink(index) {
             links.splice(index, 1);
             atualizarTudo();
-            showToast('Link excluido!');
+            showToast('Link excluído!');
         }
 
         function atualizarTudo() {
@@ -915,27 +916,27 @@
 
         function generateBackup() {
             if (links.length === 0) {
-                showToast('Nao ha links para exportar', 'info');
+                showToast('Não há links para exportar', 'info');
                 return;
             }
             const code = btoa(JSON.stringify(links));
             document.getElementById('backupCode').value = code;
-            showToast('Codigo de backup gerado! Copie e guarde com seguranca.');
+            showToast('Código de backup gerado! Copie e guarde com segurança.');
         }
 
         function restoreBackup() {
             const code = document.getElementById('backupCode').value.trim();
             if (!code) {
-                showToast('Cole um codigo de backup primeiro!', 'error');
+                showToast('Cole um código de backup primeiro!', 'error');
                 return;
             }
             try {
                 const restored = JSON.parse(atob(code));
-                if (!Array.isArray(restored)) throw new Error('Formato invalido');
+                if (!Array.isArray(restored)) throw new Error('Formato inválido');
 
                 showModal(
                     'Restaurar Backup',
-                    `Restaurar ${restored.length} links? Os links atuais serao substituidos.`,
+                    `Restaurar ${restored.length} links? Os links atuais serão substituídos.`,
                     'Restaurar',
                     () => {
                         links = restored.map(l => ({ ...l, timestamp: l.timestamp || Date.now() }));
@@ -944,7 +945,7 @@
                     }
                 );
             } catch (e) {
-                showToast('Codigo de backup invalido!', 'error');
+                showToast('Código de backup inválido!', 'error');
             }
         }
 
@@ -956,7 +957,7 @@
             }
             textarea.select();
             document.execCommand('copy');
-            showToast('Codigo copiado para a area de transferencia!');
+            showToast('Código copiado para a área de transferência!');
         }
 
         async function uploadToCloud() {
@@ -1006,7 +1007,7 @@
             } catch (error) {
                 backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Offline';
                 backupStatus.className = 'backup-status offline';
-                showToast('Erro de conexao com a nuvem.', 'error');
+                showToast('Erro de conexão com a nuvem.', 'error');
             }
         }
 
@@ -1019,9 +1020,9 @@
             binId = binId.trim();
 
             if (!isValidBinId(binId)) {
-                backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Invalido';
+                backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Inválido';
                 backupStatus.className = 'backup-status offline';
-                showToast('Insira um ID de Bin valido (24 caracteres hexadecimais)', 'error');
+                showToast('Insira um ID de Bin válido (24 caracteres hexadecimais)', 'error');
                 return;
             }
 
@@ -1047,7 +1048,7 @@
                     } else {
                         backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Erro';
                         backupStatus.className = 'backup-status offline';
-                        showToast('Formato de dados invalido.', 'error');
+                        showToast('Formato de dados inválido.', 'error');
                     }
                 } else {
                     backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Erro';
@@ -1057,7 +1058,7 @@
             } catch (error) {
                 backupStatus.innerHTML = '<i class="fas fa-times-circle"></i> Offline';
                 backupStatus.className = 'backup-status offline';
-                showToast('Erro de conexao ao baixar dados.', 'error');
+                showToast('Erro de conexão ao baixar dados.', 'error');
             }
         }
     </script>
