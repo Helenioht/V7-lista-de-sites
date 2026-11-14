@@ -30,7 +30,6 @@
             --radius-sm: 10px;
         }
 
-        /* Modo claro automático caso o usuário escolha um fundo claro */
         body.light-bg {
             --bg-card: rgba(255, 255, 255, 0.88);
             --bg-card-hover: rgba(255, 255, 255, 0.98);
@@ -149,9 +148,7 @@
             box-shadow: var(--shadow-gold);
             backdrop-filter: blur(8px);
         }
-        .visitor-badge i {
-            color: var(--gold);
-        }
+        .visitor-badge i { color: var(--gold); }
 
         .container {
             width: 100%;
@@ -272,17 +269,9 @@
             scrollbar-width: auto;
             scrollbar-color: var(--gold) rgba(15, 15, 26, 0.4);
         }
-        .links-grid::-webkit-scrollbar {
-            width: 14px;
-        }
-        .links-grid::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 9px;
-        }
-        .links-grid::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #D4AF37 0%, #B8960C 100%);
-            border-radius: 9px;
-        }
+        .links-grid::-webkit-scrollbar { width: 14px; }
+        .links-grid::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 9px; }
+        .links-grid::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #D4AF37 0%, #B8960C 100%); border-radius: 9px; }
 
         .icon-card {
             background: var(--bg-item);
@@ -323,16 +312,8 @@
             transform: scale(1.1);
             border-color: var(--gold);
         }
-        .icon-favicon i {
-            color: var(--gold);
-            font-size: 1.4rem;
-        }
-        .icon-favicon img {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            object-fit: contain;
-        }
+        .icon-favicon i { color: var(--gold); font-size: 1.4rem; }
+        .icon-favicon img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
 
         .icon-name {
             color: var(--text-main);
@@ -359,7 +340,6 @@
             right: 6px;
             display: flex;
             gap: 2px;
-            opacity: 1;
             background: var(--bg-card);
             border-radius: 6px;
             padding: 2px;
@@ -379,14 +359,8 @@
             font-size: 0.75rem;
             transition: all 0.2s ease;
         }
-        .btn-icon-sm:hover {
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--gold);
-        }
-        .btn-icon-sm.delete:hover {
-            background: rgba(231, 76, 60, 0.2);
-            color: var(--danger);
-        }
+        .btn-icon-sm:hover { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
+        .btn-icon-sm.delete:hover { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -394,14 +368,8 @@
             padding: 40px 20px;
             color: var(--text-dim);
         }
-        .empty-state i {
-            font-size: 2.5rem;
-            color: var(--border);
-            margin-bottom: 12px;
-        }
-        .empty-state p {
-            font-size: 0.9rem;
-        }
+        .empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: 12px; }
+        .empty-state p { font-size: 0.9rem; }
 
         .backup-card {
             background: var(--bg-card);
@@ -530,7 +498,6 @@
             border-color: var(--danger);
         }
 
-        /* RODAPÉ E CONTROLE DE COR DE FUNDO APRIMORADO */
         .footer {
             max-width: 820px;
             margin: 24px auto 8px auto;
@@ -586,10 +553,7 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             position: relative;
         }
-        .color-preset-btn:hover {
-            transform: scale(1.15);
-            border-color: var(--gold);
-        }
+        .color-preset-btn:hover { transform: scale(1.15); border-color: var(--gold); }
         .color-preset-btn.active {
             border-color: #fff;
             box-shadow: 0 0 0 3px var(--gold), 0 4px 10px rgba(0,0,0,0.4);
@@ -607,14 +571,8 @@
             cursor: pointer;
             transition: border-color 0.2s;
         }
-        .custom-color-wrapper:hover {
-            border-color: var(--gold);
-        }
-        .custom-color-wrapper span {
-            font-size: 0.78rem;
-            color: var(--text-main);
-            font-weight: 500;
-        }
+        .custom-color-wrapper:hover { border-color: var(--gold); }
+        .custom-color-wrapper span { font-size: 0.78rem; color: var(--text-main); font-weight: 500; }
 
         .color-custom-input {
             -webkit-appearance: none;
@@ -630,16 +588,9 @@
             padding: 0;
         }
         .color-custom-input::-webkit-color-swatch-wrapper { padding: 0; }
-        .color-custom-input::-webkit-color-swatch {
-            border: 2px solid var(--gold);
-            border-radius: 50%;
-        }
+        .color-custom-input::-webkit-color-swatch { border: 2px solid var(--gold); border-radius: 50%; }
 
-        .footer-credit {
-            color: var(--text-muted);
-            font-size: 0.78rem;
-            text-align: center;
-        }
+        .footer-credit { color: var(--text-muted); font-size: 0.78rem; text-align: center; }
         .footer-credit i { color: var(--danger); }
 
         .toast-container {
@@ -690,10 +641,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
         }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -706,23 +654,9 @@
             transition: transform 0.3s ease;
         }
         .modal-overlay.active .modal { transform: scale(1); }
-        .modal-title {
-            font-size: 1.1rem;
-            color: var(--text-main);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .modal-text {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
+        .modal-title { font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px; font-weight: 600; }
+        .modal-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
 
         :focus { outline: none; }
         :focus-visible {
@@ -761,7 +695,6 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
         }
-
         @media (max-width: 480px) {
             h1 { font-size: 1.6rem; }
             .profile-img { width: 70px; height: 70px; }
@@ -773,10 +706,7 @@
             .backup-buttons { justify-content: center; }
             .backup-buttons .btn-action { flex: 1; justify-content: center; }
         }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
+        .fade-in { animation: fadeIn 0.5s ease; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -785,7 +715,6 @@
 </head>
 <body>
     <div class="particles" id="particles"></div>
-
     <div class="toast-container" id="toastContainer"></div>
 
     <div class="modal-overlay" id="confirmModal">
@@ -909,7 +838,6 @@
 
         const apiKey = "$2a$10$6LWQS4dq3RipfxlyxlslGOjq9m7nMU16KhyTda/WVJo3IJdDHqXRa";
         const accessKey = "$2a$10$aYr1XrR5N.6GChZPrzPn3uXL8PLlNVja0dWs4JCUWm7ynfGtO33tm";
-        const defaultBinId = "6a792b99da38895dfecf0ede";
         const binStorageKey = "helenio_jsonbin_id";
 
         const visitorCountKey = "helenio_visitor_count";
@@ -930,9 +858,9 @@
             atualizarContadorVisitantes();
             carregarCorFundo();
 
-            const inicialId = localStorage.getItem(binStorageKey) || defaultBinId;
-            if (inicialId && isValidBinId(inicialId.trim())) {
-                document.getElementById('backupCode').value = inicialId.trim();
+            const savedBinId = localStorage.getItem(binStorageKey);
+            if (savedBinId && isValidBinId(savedBinId.trim())) {
+                document.getElementById('backupCode').value = savedBinId.trim();
             }
         });
 
@@ -954,7 +882,6 @@
             const r = parseInt(hexColor.substr(1, 2), 16);
             const g = parseInt(hexColor.substr(3, 2), 16);
             const b = parseInt(hexColor.substr(5, 2), 16);
-            // Cálculo de luminosidade percebida
             const luminosidade = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
             if (luminosidade > 0.62) {
                 document.body.classList.add('light-bg');
@@ -1104,7 +1031,6 @@
                 card.tabIndex = 0;
                 card.setAttribute("role", "link");
                 card.setAttribute("aria-label", "Abrir " + link.name);
-                card.dataset.remoteItem = "true";
                 card.onclick = () => openLink(link.url);
                 card.onkeydown = (event) => {
                     if (event.key === "Enter" || event.key === " " || event.key === "OK" || event.keyCode === 23 || event.keyCode === 66) {
@@ -1155,9 +1081,7 @@
                 return;
             }
 
-            const duplicateIndex = links.findIndex((l, i) => 
-                l.url === url && i !== editIndex
-            );
+            const duplicateIndex = links.findIndex((l, i) => l.url === url && i !== editIndex);
             if (duplicateIndex !== -1) {
                 showToast('Este link já existe!', 'error');
                 return;
@@ -1258,15 +1182,19 @@
             }
         }
 
-        function copyBackupCode() {
+        // Função de cópia modernizada com navigator.clipboard (Substituindo o execCommand obsoleto)
+        async function copyBackupCode() {
             const textarea = document.getElementById('backupCode');
             if (!textarea.value) {
                 showToast('Nada para copiar', 'info');
                 return;
             }
-            textarea.select();
-            document.execCommand('copy');
-            showToast('Código copiado para a área de transferência!');
+            try {
+                await navigator.clipboard.writeText(textarea.value);
+                showToast('Código copiado para a área de transferência!');
+            } catch (err) {
+                showToast('Falha ao copiar código', 'error');
+            }
         }
 
         async function uploadToCloud() {
@@ -1274,8 +1202,8 @@
             backupStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             backupStatus.className = 'backup-status';
 
-            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || defaultBinId;
-            binId = binId.trim();
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey);
+            binId = binId ? binId.trim() : "";
 
             let url = "https://api.jsonbin.io/v3/b";
             let method = "POST";
@@ -1325,13 +1253,13 @@
             backupStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Baixando...';
             backupStatus.className = 'backup-status';
 
-            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey) || defaultBinId;
-            binId = binId.trim();
+            let binId = document.getElementById('backupCode').value.trim() || localStorage.getItem(binStorageKey);
+            binId = binId ? binId.trim() : "";
 
             if (!isValidBinId(binId)) {
-                backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Inválido';
+                backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Necessário';
                 backupStatus.className = 'backup-status offline';
-                showToast('Insira um ID de Bin válido (24 caracteres hexadecimais)', 'error');
+                showToast('Insira um ID de Bin válido (24 caracteres)', 'error');
                 return;
             }
 
