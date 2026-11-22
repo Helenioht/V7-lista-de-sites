@@ -51,7 +51,7 @@
             background: var(--bg-gradient);
             min-height: 100vh;
             color: var(--text-main);
-            padding: 20px 12px;
+            padding: 20px 12px 90px 12px;
             position: relative;
             overflow-x: hidden;
             transition: background 0.4s ease, color 0.3s ease;
@@ -131,6 +131,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-top: 12px;
         }
 
@@ -147,8 +149,40 @@
             font-weight: 500;
             box-shadow: var(--shadow-gold);
             backdrop-filter: blur(8px);
+            min-height: 40px;
         }
         .visitor-badge i { color: var(--gold); }
+
+        .cursor-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-gold);
+            backdrop-filter: blur(8px);
+            min-height: 40px !important;
+            transition: all 0.25s ease;
+        }
+        .cursor-toggle-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .cursor-toggle-btn.active {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0f0f1a;
+            border-color: var(--gold);
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+        }
+        .cursor-toggle-btn.active i {
+            color: #0f0f1a;
+        }
 
         .container {
             width: 100%;
@@ -246,6 +280,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 16px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
@@ -257,6 +293,31 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+        .grid-scroll-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-scroll-inline {
+            padding: 6px 12px;
+            min-height: 36px !important;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+        .btn-scroll-inline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.12);
         }
 
         .links-grid {
@@ -289,7 +350,7 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .icon-card:hover {
+        .icon-card:hover, .icon-card.cursor-hover {
             background: var(--bg-card-hover);
             border-color: var(--gold);
             transform: translateY(-5px);
@@ -308,7 +369,7 @@
             border: 1px solid var(--border);
             transition: transform 0.3s ease;
         }
-        .icon-card:hover .icon-favicon {
+        .icon-card:hover .icon-favicon, .icon-card.cursor-hover .icon-favicon {
             transform: scale(1.1);
             border-color: var(--gold);
         }
@@ -348,6 +409,7 @@
 
         .btn-icon-sm {
             width: 24px; height: 24px;
+            min-height: 24px !important;
             border-radius: 4px;
             border: none;
             background: transparent;
@@ -359,8 +421,8 @@
             font-size: 0.75rem;
             transition: all 0.2s ease;
         }
-        .btn-icon-sm:hover { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
-        .btn-icon-sm.delete:hover { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
+        .btn-icon-sm:hover, .btn-icon-sm.cursor-hover { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
+        .btn-icon-sm.delete:hover, .btn-icon-sm.delete.cursor-hover { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -439,6 +501,7 @@
             top: 50%;
             transform: translateY(-50%);
             width: 28px; height: 28px;
+            min-height: 28px !important;
             border-radius: 6px;
             border: none;
             background: rgba(128,128,128,0.15);
@@ -474,7 +537,7 @@
             gap: 5px;
             font-weight: 500;
         }
-        .btn-action:hover {
+        .btn-action:hover, .btn-action.cursor-hover {
             border-color: var(--gold);
             color: var(--gold);
             background: rgba(212, 175, 55, 0.08);
@@ -485,9 +548,10 @@
             border: none;
             font-weight: 600;
         }
-        .btn-action.primary:hover {
+        .btn-action.primary:hover, .btn-action.primary.cursor-hover {
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
             transform: translateY(-1px);
+            color: #0f0f1a;
         }
         .btn-action.danger {
             border-color: rgba(231, 76, 60, 0.4);
@@ -496,6 +560,65 @@
         .btn-action.danger:hover {
             background: rgba(231, 76, 60, 0.12);
             border-color: var(--danger);
+        }
+
+        /* Botões Flutuantes de Rolagem da Página */
+        .page-scroll-dock {
+            position: fixed;
+            right: 14px;
+            bottom: 16px;
+            z-index: 950;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+        .scroll-dock-btn {
+            width: 44px;
+            height: 44px;
+            min-height: 44px !important;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-item);
+            color: var(--gold);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .scroll-dock-btn:hover, .scroll-dock-btn.cursor-hover {
+            background: var(--gold);
+            color: #0f0f1a;
+            transform: scale(1.06);
+        }
+
+        /* Cursor Virtual */
+        #virtualCursor {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 28px;
+            height: 28px;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            transform: translate(-4px, -4px);
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.85));
+            transition: transform 0.08s ease;
+        }
+        #virtualCursor.clicking {
+            transform: translate(-4px, -4px) scale(0.82);
+        }
+        .cursor-hovered-generic {
+            outline: 3px solid var(--gold) !important;
+            outline-offset: 2px;
         }
 
         .footer {
@@ -682,7 +805,7 @@
         .links-grid { scroll-behavior: smooth; overscroll-behavior: contain; }
 
         @media (min-width: 700px) {
-            body { padding: 28px 24px; }
+            body { padding: 28px 24px 90px 24px; }
             .container, .footer { max-width: 1120px; }
             .links-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); max-height: 65vh; }
             .icon-card { min-height: 155px; padding: 20px 14px; }
@@ -705,6 +828,8 @@
             .links-grid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
             .backup-buttons { justify-content: center; }
             .backup-buttons .btn-action { flex: 1; justify-content: center; }
+            .page-scroll-dock { right: 8px; bottom: 10px; padding: 6px; gap: 6px; }
+            .scroll-dock-btn { width: 38px; height: 38px; min-height: 38px !important; font-size: 0.9rem; }
         }
         .fade-in { animation: fadeIn 0.5s ease; }
         @keyframes fadeIn {
@@ -716,6 +841,29 @@
 <body>
     <div class="particles" id="particles"></div>
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Ponteiro do Cursor Virtual -->
+    <div id="virtualCursor" aria-hidden="true">
+        <svg viewBox="0 0 28 28" width="28" height="28">
+            <path d="M3 2 L24 13 L14 16 L19 25 L15 27 L10 18 L3 23 Z" fill="#D4AF37" stroke="#0f0f1a" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <!-- Dock Flutuante de Rolagem da Página -->
+    <div class="page-scroll-dock" aria-label="Controles de rolagem da tela">
+        <button type="button" class="scroll-dock-btn" onclick="rolarPaginaTopo()" title="Ir para o topo da tela" aria-label="Ir para o topo da tela">
+            <i class="fas fa-angle-double-up"></i>
+        </button>
+        <button type="button" class="scroll-dock-btn" onclick="rolarPagina(-1)" title="Rolar tela para cima" aria-label="Rolar tela para cima">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+        <button type="button" class="scroll-dock-btn" onclick="rolarPagina(1)" title="Rolar tela para baixo" aria-label="Rolar tela para baixo">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <button type="button" class="scroll-dock-btn" onclick="rolarPaginaBase()" title="Ir para o final da tela" aria-label="Ir para o final da tela">
+            <i class="fas fa-angle-double-down"></i>
+        </button>
+    </div>
 
     <div class="modal-overlay" id="confirmModal">
         <div class="modal">
@@ -741,6 +889,10 @@
                 <i class="fas fa-eye"></i>
                 <span>Visitantes: <strong id="visitorCount">0</strong></span>
             </div>
+            <button type="button" class="cursor-toggle-btn" id="cursorToggleBtn" onclick="alternarModoCursor()" title="Ativar ou desativar o cursor virtual controlado pelas setas">
+                <i class="fas fa-mouse-pointer"></i>
+                <span id="cursorToggleLabel">Cursor Virtual: Desligado</span>
+            </button>
         </div>
     </header>
 
@@ -775,6 +927,14 @@
                 <div class="links-title">
                     <i class="fas fa-th-large"></i>
                     Meus Links
+                </div>
+                <div class="grid-scroll-controls" aria-label="Rolagem da lista de links">
+                    <button type="button" class="btn-scroll-inline" onclick="rolarGradeLinks(-1)" title="Rolar lista de links para cima" aria-label="Rolar lista de links para cima">
+                        <i class="fas fa-arrow-up"></i> Subir
+                    </button>
+                    <button type="button" class="btn-scroll-inline" onclick="rolarGradeLinks(1)" title="Rolar lista de links para baixo" aria-label="Rolar lista de links para baixo">
+                        <i class="fas fa-arrow-down"></i> Descer
+                    </button>
                 </div>
             </div>
             <div id="linksGrid" class="links-grid"></div>
@@ -843,6 +1003,12 @@
         const visitorCountKey = "helenio_visitor_count";
         const bgTypeKey = "helenio_bg_type";
         const bgColorKey = "helenio_bg_color";
+        const cursorModeKey = "helenio_virtual_cursor";
+
+        let cursorAtivo = localStorage.getItem(cursorModeKey) === 'true';
+        let cursorX = Math.round(window.innerWidth / 2);
+        let cursorY = Math.round(window.innerHeight / 2);
+        let ultimoElementoSobCursor = null;
 
         const presets = {
             default: "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%)",
@@ -857,12 +1023,118 @@
             atualizarTudo();
             atualizarContadorVisitantes();
             carregarCorFundo();
+            aplicarEstadoCursor(false);
 
             const savedBinId = localStorage.getItem(binStorageKey);
             if (savedBinId && isValidBinId(savedBinId.trim())) {
                 document.getElementById('backupCode').value = savedBinId.trim();
             }
         });
+
+        /* Funções de Rolagem da Tela e da Grade */
+        function rolarPagina(direcao) {
+            const distancia = Math.round(window.innerHeight * 0.65) * direcao;
+            window.scrollBy({ top: distancia, behavior: 'smooth' });
+        }
+
+        function rolarPaginaTopo() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function rolarPaginaBase() {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
+
+        function rolarGradeLinks(direcao) {
+            const grid = document.getElementById('linksGrid');
+            if (!grid) return;
+            const distancia = Math.max(220, Math.round(grid.clientHeight * 0.7)) * direcao;
+            grid.scrollBy({ top: distancia, behavior: 'smooth' });
+        }
+
+        /* Funções do Cursor Virtual */
+        function alternarModoCursor() {
+            cursorAtivo = !cursorAtivo;
+            localStorage.setItem(cursorModeKey, cursorAtivo);
+            aplicarEstadoCursor(true);
+        }
+
+        function aplicarEstadoCursor(notificar) {
+            const btn = document.getElementById('cursorToggleBtn');
+            const label = document.getElementById('cursorToggleLabel');
+            const cursorEl = document.getElementById('virtualCursor');
+
+            if (cursorAtivo) {
+                btn.classList.add('active');
+                label.textContent = 'Cursor Virtual: Ligado';
+                cursorEl.style.display = 'block';
+                if (document.activeElement && document.activeElement !== document.body) {
+                    document.activeElement.blur();
+                }
+                atualizarPosicaoCursor();
+                if (notificar) {
+                    showToast('Cursor virtual ativado (use as setas e OK/Enter)', 'info');
+                }
+            } else {
+                btn.classList.remove('active');
+                label.textContent = 'Cursor Virtual: Desligado';
+                cursorEl.style.display = 'none';
+                limparDestaqueCursor();
+                if (notificar) {
+                    showToast('Cursor virtual desativado (navegação por foco)', 'info');
+                }
+            }
+        }
+
+        function limparDestaqueCursor() {
+            if (ultimoElementoSobCursor) {
+                ultimoElementoSobCursor.classList.remove('cursor-hover', 'cursor-hovered-generic');
+                ultimoElementoSobCursor = null;
+            }
+        }
+
+        function atualizarPosicaoCursor() {
+            const cursorEl = document.getElementById('virtualCursor');
+            if (!cursorAtivo || !cursorEl) return;
+
+            cursorX = Math.max(6, Math.min(window.innerWidth - 10, cursorX));
+            cursorY = Math.max(6, Math.min(window.innerHeight - 10, cursorY));
+
+            cursorEl.style.left = cursorX + 'px';
+            cursorEl.style.top = cursorY + 'px';
+
+            const alvo = document.elementFromPoint(cursorX, cursorY);
+            const interativo = alvo ? alvo.closest('button, a, input, textarea, label, .icon-card') : null;
+
+            if (interativo !== ultimoElementoSobCursor) {
+                limparDestaqueCursor();
+                if (interativo) {
+                    if (interativo.matches('.icon-card, .btn-action, .btn-icon-sm, .scroll-dock-btn')) {
+                        interativo.classList.add('cursor-hover');
+                    } else {
+                        interativo.classList.add('cursor-hovered-generic');
+                    }
+                    ultimoElementoSobCursor = interativo;
+                }
+            }
+        }
+
+        function acionarCliqueCursor() {
+            const cursorEl = document.getElementById('virtualCursor');
+            if (cursorEl) {
+                cursorEl.classList.add('clicking');
+                setTimeout(() => cursorEl.classList.remove('clicking'), 140);
+            }
+
+            const alvo = document.elementFromPoint(cursorX, cursorY);
+            if (!alvo) return;
+
+            const interativo = alvo.closest('button, a, input, textarea, label, .icon-card') || alvo;
+            if (interativo.matches('input, textarea')) {
+                interativo.focus();
+            }
+            interativo.click();
+        }
 
         function atualizarIndicadorCor(presetAtivo) {
             document.querySelectorAll('.color-preset-btn').forEach(btn => {
@@ -1033,7 +1305,7 @@
                 card.setAttribute("aria-label", "Abrir " + link.name);
                 card.onclick = () => openLink(link.url);
                 card.onkeydown = (event) => {
-                    if (event.key === "Enter" || event.key === " " || event.key === "OK" || event.keyCode === 23 || event.keyCode === 66) {
+                    if (!cursorAtivo && (event.key === "Enter" || event.key === " " || event.key === "OK" || event.keyCode === 23 || event.keyCode === 66)) {
                         event.preventDefault(); openLink(link.url);
                     }
                 };
@@ -1182,7 +1454,6 @@
             }
         }
 
-        // Função de cópia modernizada com navigator.clipboard (Substituindo o execCommand obsoleto)
         async function copyBackupCode() {
             const textarea = document.getElementById('backupCode');
             if (!textarea.value) {
@@ -1371,7 +1642,44 @@
                 const direcao = mapa[key] ||
                     (code === 19 ? 'up' : code === 20 ? 'down' : code === 21 ? 'left' : code === 22 ? 'right' : null);
 
-                if (direcao) {
+                // Se o Cursor Virtual estiver ativo e não estiver digitando em campo de texto
+                const emCampoTexto = document.activeElement && document.activeElement.matches('input[type="text"], textarea');
+                if (cursorAtivo && !emCampoTexto) {
+                    const passo = event.shiftKey ? 55 : 28;
+                    if (direcao === 'up') {
+                        event.preventDefault();
+                        if (cursorY <= 25) window.scrollBy({ top: -120, behavior: 'smooth' });
+                        cursorY -= passo;
+                        atualizarPosicaoCursor();
+                        return;
+                    }
+                    if (direcao === 'down') {
+                        event.preventDefault();
+                        if (cursorY >= window.innerHeight - 25) window.scrollBy({ top: 120, behavior: 'smooth' });
+                        cursorY += passo;
+                        atualizarPosicaoCursor();
+                        return;
+                    }
+                    if (direcao === 'left') {
+                        event.preventDefault();
+                        cursorX -= passo;
+                        atualizarPosicaoCursor();
+                        return;
+                    }
+                    if (direcao === 'right') {
+                        event.preventDefault();
+                        cursorX += passo;
+                        atualizarPosicaoCursor();
+                        return;
+                    }
+                    if (key === 'Enter' || key === ' ' || key === 'OK' || code === 23 || code === 66) {
+                        event.preventDefault();
+                        acionarCliqueCursor();
+                        return;
+                    }
+                }
+
+                if (direcao && !emCampoTexto) {
                     event.preventDefault();
                     moverFoco(direcao);
                     return;
@@ -1392,9 +1700,21 @@
                 }
             }, { passive: false });
 
+            document.addEventListener('mousemove', function(event) {
+                if (cursorAtivo) {
+                    cursorX = event.clientX;
+                    cursorY = event.clientY;
+                    atualizarPosicaoCursor();
+                }
+            });
+
+            window.addEventListener('scroll', function() {
+                if (cursorAtivo) atualizarPosicaoCursor();
+            }, { passive: true });
+
             document.addEventListener('focusin', function(event) {
                 const el = event.target;
-                if (el && el.matches && el.matches(seletorFocavel)) {
+                if (!cursorAtivo && el && el.matches && el.matches(seletorFocavel)) {
                     el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
                 }
             });
