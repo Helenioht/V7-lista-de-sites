@@ -115,6 +115,13 @@
             width: 54px;
             height: 54px;
         }
+        .app-emblem img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 50%;
+            object-fit: cover;
+        }
         .profile-ring {
             position: absolute;
             top: -6px; left: -6px;
@@ -635,12 +642,11 @@
     <header class="header">
         <div class="profile-wrapper">
             <div class="profile-ring"></div>
-            <!-- ÍCONE SVG EMBUTIDO PRINCIPAL -->
-            <div class="app-emblem" title="Ícone Sites Preferidos Helenio">
-                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="32" cy="32" r="26" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-dasharray="6 4"/>
-                    <polygon points="32,12 38,25 52,27 42,37 45,51 32,44 19,51 22,37 12,27 26,25" fill="#FFD700" stroke="#0f0f1a" stroke-width="1.5"/>
-                </svg>
+            <!-- FOTO DO PERFIL RECORTADA EM CÍRCULO -->
+            <div class="app-emblem" title="Foto do perfil">
+                <img src="https://i.ibb.co/VpvZ90tV/IMG-20260714-173055.jpg"
+                     alt="Foto do perfil"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=&quot;color:#D4AF37;font-size:12px&quot;>Imagem indisponível</span>';">
             </div>
         </div>
         <h1>Sites Preferidos Helenio</h1>
