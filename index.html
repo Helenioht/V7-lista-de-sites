@@ -57,6 +57,17 @@
             transition: background 0.4s ease, color 0.3s ease;
         }
 
+        body.tv-cast-mode .container,
+        body.tv-cast-mode .footer {
+            max-width: 1360px;
+        }
+        body.tv-cast-mode .icon-name {
+            font-size: 1.08rem;
+        }
+        body.tv-cast-mode .icon-url {
+            font-size: 0.86rem;
+        }
+
         .particles {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -433,6 +444,7 @@
         .empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: 12px; }
         .empty-state p { font-size: 0.9rem; }
 
+        .tv-mirror-card,
         .backup-card {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -440,6 +452,10 @@
             border: 1px solid var(--border);
             backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        .backup-card {
+            margin-bottom: 0;
         }
         .backup-header {
             display: flex;
@@ -471,6 +487,40 @@
         .backup-status.offline {
             background: rgba(231, 76, 60, 0.12);
             color: var(--danger);
+        }
+
+        .tv-mirror-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+        .tv-preview-box {
+            display: none;
+            margin-top: 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+        .tv-preview-box.active {
+            display: block;
+        }
+        .tv-preview-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(20, 20, 35, 0.85);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.78rem;
+            color: var(--gold-light);
+        }
+        .tv-preview-video {
+            width: 100%;
+            max-height: 320px;
+            display: block;
+            background: #05050a;
         }
 
         .backup-input-group {
@@ -940,6 +990,48 @@
             <div id="linksGrid" class="links-grid"></div>
         </div>
 
+        <!-- Seção de Espelhamento para TV -->
+        <div class="tv-mirror-card fade-in" id="tvMirrorCard">
+            <div class="backup-header">
+                <div class="backup-title">
+                    <i class="fas fa-tv"></i>
+                    Espelhamento para TV
+                </div>
+                <span class="backup-status offline" id="tvMirrorStatus">
+                    <i class="fas fa-broadcast-tower"></i> Aguardando TV
+                </span>
+            </div>
+            <p class="tv-mirror-desc">
+                Transmita a tela para a TV via <strong>Presentation API</strong>, capture a tela/aba para envio via navegador ou ative o <strong>Modo TV</strong> com tela cheia e controle remoto.
+            </p>
+            <div class="backup-buttons">
+                <button type="button" class="btn-action primary" onclick="espelharApresentacaoTV()">
+                    <i class="fas fa-tv"></i> Espelhar na TV (Cast)
+                </button>
+                <button type="button" class="btn-action" onclick="capturarTelaParaTV()">
+                    <i class="fas fa-desktop"></i> Capturar Tela / Aba
+                </button>
+                <button type="button" class="btn-action" onclick="abrirJanelaEspelhoTV()">
+                    <i class="fas fa-external-link-alt"></i> Janela Dedicada TV
+                </button>
+                <button type="button" class="btn-action" id="tvModeBtn" onclick="alternarModoTV()">
+                    <i class="fas fa-expand"></i> <span id="tvModeLabel">Modo TV: Desligado</span>
+                </button>
+                <button type="button" class="btn-action danger" id="stopMirrorBtn" onclick="pararEspelhamentoTV()" style="display:none;">
+                    <i class="fas fa-stop-circle"></i> Encerrar Espelho
+                </button>
+            </div>
+            <div class="tv-preview-box" id="tvPreviewBox">
+                <div class="tv-preview-bar">
+                    <span><i class="fas fa-satellite-dish"></i> Monitor de Espelhamento Ativo (envie esta janela/aba para a TV)</span>
+                    <button type="button" class="btn-icon-sm" onclick="pararEspelhamentoTV()" title="Parar captura">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <video id="tvPreviewVideo" class="tv-preview-video" autoplay playsinline muted></video>
+            </div>
+        </div>
+
         <div class="backup-card fade-in">
             <div class="backup-header">
                 <div class="backup-title">
@@ -1004,11 +1096,16 @@
         const bgTypeKey = "helenio_bg_type";
         const bgColorKey = "helenio_bg_color";
         const cursorModeKey = "helenio_virtual_cursor";
+        const tvModeKey = "helenio_tv_mirror_mode";
 
         let cursorAtivo = localStorage.getItem(cursorModeKey) === 'true';
         let cursorX = Math.round(window.innerWidth / 2);
         let cursorY = Math.round(window.innerHeight / 2);
         let ultimoElementoSobCursor = null;
+
+        let tvModoAtivo = localStorage.getItem(tvModeKey) === 'true';
+        let tvStreamAtivo = null;
+        let tvPresentationConn = null;
 
         const presets = {
             default: "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%)",
@@ -1024,12 +1121,155 @@
             atualizarContadorVisitantes();
             carregarCorFundo();
             aplicarEstadoCursor(false);
+            aplicarEstadoModoTV(false);
 
             const savedBinId = localStorage.getItem(binStorageKey);
             if (savedBinId && isValidBinId(savedBinId.trim())) {
                 document.getElementById('backupCode').value = savedBinId.trim();
             }
         });
+
+        /* Funções de Espelhamento para TV */
+        function atualizarStatusEspelhoTV(texto, conectado) {
+            const badge = document.getElementById('tvMirrorStatus');
+            const stopBtn = document.getElementById('stopMirrorBtn');
+            if (!badge) return;
+            badge.innerHTML = `<i class="fas fa-broadcast-tower"></i> ${texto}`;
+            badge.className = conectado ? 'backup-status' : 'backup-status offline';
+            if (stopBtn) {
+                stopBtn.style.display = conectado ? 'inline-flex' : 'none';
+            }
+        }
+
+        async function espelharApresentacaoTV() {
+            const urlAtual = window.location.href;
+            if ('PresentationRequest' in window && navigator.presentation) {
+                try {
+                    const request = new PresentationRequest([urlAtual]);
+                    navigator.presentation.defaultRequest = request;
+                    const connection = await request.start();
+                    tvPresentationConn = connection;
+                    atualizarStatusEspelhoTV('Espelhado na TV', true);
+                    showToast('Sessão de espelhamento iniciada na TV!', 'success');
+
+                    connection.addEventListener('close', () => {
+                        tvPresentationConn = null;
+                        atualizarStatusEspelhoTV('Aguardando TV', false);
+                        showToast('Conexão com a TV encerrada.', 'info');
+                    });
+                    return;
+                } catch (err) {
+                    showToast('Cast nativo indisponível neste navegador; usando modo tela/janela.', 'info');
+                }
+            }
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+                await capturarTelaParaTV();
+            } else {
+                abrirJanelaEspelhoTV();
+            }
+        }
+
+        async function capturarTelaParaTV() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                abrirJanelaEspelhoTV();
+                return;
+            }
+            try {
+                pararCapturaLocalTV(false);
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { frameRate: { ideal: 30, max: 60 } },
+                    audio: true
+                });
+                tvStreamAtivo = stream;
+                const videoEl = document.getElementById('tvPreviewVideo');
+                const previewBox = document.getElementById('tvPreviewBox');
+                if (videoEl && previewBox) {
+                    videoEl.srcObject = stream;
+                    previewBox.classList.add('active');
+                }
+                atualizarStatusEspelhoTV('Capturando Tela', true);
+                showToast('Tela capturada! Selecione a TV no menu de transmissão do dispositivo.', 'success');
+
+                const [track] = stream.getVideoTracks();
+                if (track) {
+                    track.addEventListener('ended', () => {
+                        pararEspelhamentoTV();
+                    });
+                }
+            } catch (err) {
+                showToast('Captura cancelada ou bloqueada pelo dispositivo.', 'info');
+            }
+        }
+
+        function abrirJanelaEspelhoTV() {
+            const win = window.open(window.location.href, 'EspelhoTVHelenio', 'noopener,noreferrer');
+            if (win) {
+                atualizarStatusEspelhoTV('Janela TV Aberta', true);
+                showToast('Janela aberta. Envie esta janela ou aba para a TV via Cast/Miracast.', 'success');
+            } else {
+                showToast('Permita pop-ups para abrir a janela de espelhamento na TV.', 'error');
+            }
+        }
+
+        function alternarModoTV() {
+            tvModoAtivo = !tvModoAtivo;
+            localStorage.setItem(tvModeKey, tvModoAtivo);
+            aplicarEstadoModoTV(true);
+        }
+
+        function aplicarEstadoModoTV(notificar) {
+            const btn = document.getElementById('tvModeBtn');
+            const label = document.getElementById('tvModeLabel');
+            document.body.classList.toggle('tv-cast-mode', tvModoAtivo);
+
+            if (tvModoAtivo) {
+                if (btn) btn.classList.add('primary');
+                if (label) label.textContent = 'Modo TV: Ligado';
+                if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+                if (notificar) {
+                    showToast('Modo TV ativado (layout ampliado para tela grande)', 'info');
+                }
+            } else {
+                if (btn) btn.classList.remove('primary');
+                if (label) label.textContent = 'Modo TV: Desligado';
+                if (notificar) {
+                    showToast('Modo TV desativado', 'info');
+                }
+            }
+        }
+
+        function pararCapturaLocalTV(atualizarBadge = true) {
+            if (tvStreamAtivo) {
+                tvStreamAtivo.getTracks().forEach(t => t.stop());
+                tvStreamAtivo = null;
+            }
+            const videoEl = document.getElementById('tvPreviewVideo');
+            const previewBox = document.getElementById('tvPreviewBox');
+            if (videoEl) videoEl.srcObject = null;
+            if (previewBox) previewBox.classList.remove('active');
+            if (atualizarBadge && !tvPresentationConn) {
+                atualizarStatusEspelhoTV('Aguardando TV', false);
+            }
+        }
+
+        function pararEspelhamentoTV() {
+            if (tvPresentationConn) {
+                try { tvPresentationConn.terminate(); } catch (_) {}
+                tvPresentationConn = null;
+            }
+            pararCapturaLocalTV(false);
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+            tvModoAtivo = false;
+            localStorage.setItem(tvModeKey, 'false');
+            aplicarEstadoModoTV(false);
+            atualizarStatusEspelhoTV('Aguardando TV', false);
+            showToast('Espelhamento para TV encerrado.', 'info');
+        }
 
         /* Funções de Rolagem da Tela e da Grade */
         function rolarPagina(direcao) {
