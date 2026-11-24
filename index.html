@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sites Preferidos Helenio</title>
-    <link rel="icon" href="https://i.ibb.co/p6j8M5Yh/icon.png" type="image/png">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2316213e'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23D4AF37' stroke-width='4'/%3E%3Cpolygon points='32,16 37,27 49,28 40,36 43,48 32,41 21,48 24,36 15,28 27,27' fill='%23D4AF37'/%3E%3C/svg%3E" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -12,22 +12,18 @@
             --gold: #D4AF37;
             --gold-light: #F5E7B2;
             --gold-dark: #B8960C;
-            --gold-glow: rgba(212, 175, 55, 0.3);
+            --gold-glow: rgba(212, 175, 55, 0.35);
             --bg-main: #0f0f1a;
-            --bg-card: rgba(30, 30, 50, 0.85);
-            --bg-card-hover: rgba(40, 40, 65, 0.95);
-            --bg-input: rgba(255, 255, 255, 0.05);
+            --bg-card: rgba(30, 30, 50, 0.88);
+            --bg-card-hover: rgba(45, 45, 75, 0.98);
+            --bg-input: rgba(255, 255, 255, 0.06);
             --success: #2ecc71;
-            --success-hover: #27ae60;
             --danger: #e74c3c;
-            --danger-hover: #c0392b;
-            --primary: #7b8fa1;
-            --border: rgba(212, 175, 55, 0.2);
+            --border: rgba(212, 175, 55, 0.25);
             --text-main: #e8e6e3;
             --text-muted: #a0a0b0;
             --text-dim: #6b6b7b;
-            --shadow: 0 8px 32px rgba(0,0,0,0.4);
-            --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.15);
+            --shadow: 0 8px 32px rgba(0,0,0,0.45);
             --radius: 16px;
             --radius-sm: 10px;
         }
@@ -39,10 +35,35 @@
             background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             color: var(--text-main);
-            padding: 20px 12px;
+            padding: 20px 12px 60px 12px;
             position: relative;
             overflow-x: hidden;
             scroll-behavior: smooth;
+        }
+
+        /* CURSOR VIRTUAL REAL (VISÍVEL NA TV E NO PC) */
+        #tvVirtualCursor {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 36px;
+            height: 36px;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-4px, -4px);
+            transition: top 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                        left 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.2s ease,
+                        transform 0.1s ease;
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85));
+            display: block;
+        }
+        #tvVirtualCursor.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #tvVirtualCursor.clicking {
+            transform: translate(-4px, -4px) scale(0.82);
         }
 
         .particles {
@@ -57,13 +78,13 @@
             width: 4px; height: 4px;
             background: var(--gold);
             border-radius: 50%;
-            opacity: 0.3;
+            opacity: 0.25;
             animation: float 15s infinite ease-in-out;
         }
         @keyframes float {
             0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
             50% { transform: translateY(-10vh) rotate(180deg); }
         }
 
@@ -78,22 +99,26 @@
             display: inline-block;
             margin-bottom: 12px;
         }
-        .profile-img {
-            width: 90px; height: 90px;
+        /* ÍCONE EMBUTIDO DE ALTA VISIBILIDADE PARA TV */
+        .app-emblem {
+            width: 88px;
+            height: 88px;
             border-radius: 50%;
-            object-fit: cover;
+            background: linear-gradient(145deg, #252542 0%, #141426 100%);
             border: 3px solid var(--gold);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), 0 4px 15px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.35), 0 4px 15px rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .profile-wrapper:hover .profile-img {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 6px 20px rgba(0,0,0,0.4);
+        .app-emblem svg {
+            width: 54px;
+            height: 54px;
         }
         .profile-ring {
             position: absolute;
             top: -6px; left: -6px;
-            width: 102px; height: 102px;
+            width: 100px; height: 100px;
             border: 2px solid transparent;
             border-top-color: var(--gold);
             border-radius: 50%;
@@ -104,15 +129,14 @@
         h1 {
             font-family: 'Great Vibes', cursive;
             color: var(--gold);
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
             letter-spacing: 1px;
         }
         .subtitle {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             margin-top: 2px;
-            font-weight: 300;
         }
 
         .top-controls {
@@ -121,7 +145,7 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .visitor-badge {
@@ -133,90 +157,74 @@
             background: rgba(212, 175, 55, 0.08);
             border: 1px solid var(--border);
             color: var(--gold-light);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            box-shadow: var(--shadow-gold);
         }
-        .visitor-badge i {
-            color: var(--gold);
-        }
+        .visitor-badge i { color: var(--gold); }
 
         .cursor-toggle-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 30px;
-            background: rgba(212, 175, 55, 0.08);
+            background: rgba(212, 175, 55, 0.12);
             border: 1px solid var(--border);
             color: var(--gold-light);
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: var(--shadow-gold);
             font-family: 'Inter', sans-serif;
         }
-        .cursor-toggle-btn:hover, .cursor-toggle-btn.active {
-            background: rgba(212, 175, 55, 0.25);
+        .cursor-toggle-btn.active {
+            background: rgba(212, 175, 55, 0.3);
             border-color: var(--gold);
             color: #fff;
         }
-        .cursor-toggle-btn i {
-            color: var(--gold);
+        .cursor-toggle-btn i { color: var(--gold); }
+
+        /* REALCE DE FOCO PARA CONTROLE REMOTO DA TV */
+        body.highlight-enabled .tv-focusable:focus,
+        body.highlight-enabled .tv-focused,
+        body.highlight-enabled button:focus,
+        body.highlight-enabled input:focus,
+        body.highlight-enabled textarea:focus {
+            outline: 3px solid #FFD700 !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.75) !important;
         }
 
-        /* Estilos do Cursor Customizado (Dourado / Modo TV / Ponteiro) */
-        body.custom-cursor-active,
-        body.custom-cursor-active * {
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><circle cx='18' cy='18' r='13' fill='rgba(212,175,55,0.28)' stroke='%23D4AF37' stroke-width='2.5'/><circle cx='18' cy='18' r='4' fill='%23F5E7B2'/></svg>") 18 18, auto !important;
+        body.highlight-enabled .icon-card.tv-focused,
+        body.highlight-enabled .icon-card:focus {
+            background: var(--bg-card-hover) !important;
+            border-color: #FFD700 !important;
+            transform: translateY(-4px) scale(1.04) !important;
         }
-        body.custom-cursor-active a,
-        body.custom-cursor-active button,
-        body.custom-cursor-active .icon-card,
-        body.custom-cursor-active input,
-        body.custom-cursor-active textarea {
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='20' cy='20' r='16' fill='rgba(212,175,55,0.45)' stroke='%23F5E7B2' stroke-width='3'/><circle cx='20' cy='20' r='5' fill='%23ffffff'/></svg>") 20 20, pointer !important;
-        }
-
-        /* Realce de foco para navegação via controle remoto / teclado / cursor */
-        .icon-card:focus,
-        .icon-card.cursor-focused,
-        button:focus,
-        input:focus,
-        textarea:focus {
-            outline: 3px solid var(--gold) !important;
-            outline-offset: 2px;
-            box-shadow: 0 0 22px rgba(212, 175, 55, 0.6) !important;
-        }
-        .icon-card.cursor-focused {
-            background: var(--bg-card-hover);
-            border-color: var(--gold);
-            transform: translateY(-5px) scale(1.03);
-        }
-        .icon-card.cursor-focused .icon-actions {
+        body.highlight-enabled .icon-card.tv-focused .icon-actions,
+        body.highlight-enabled .icon-card:focus .icon-actions {
             opacity: 1;
         }
 
         .container {
             width: 100%;
-            max-width: 820px;
+            max-width: 860px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
 
-        .form-card {
+        .form-card, .links-container, .backup-card {
             background: var(--bg-card);
             border-radius: var(--radius);
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
         }
-        .form-title {
-            font-size: 0.9rem;
+
+        .form-title, .links-title, .backup-title {
+            font-size: 0.95rem;
             color: var(--gold);
             margin-bottom: 12px;
             display: flex;
@@ -224,6 +232,7 @@
             gap: 8px;
             font-weight: 600;
         }
+
         .input-group {
             display: flex;
             gap: 10px;
@@ -231,7 +240,7 @@
         }
         .input-wrapper {
             flex: 1;
-            min-width: 140px;
+            min-width: 150px;
             position: relative;
         }
         .input-wrapper i {
@@ -240,77 +249,46 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-dim);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         .input-group input {
             width: 100%;
-            padding: 10px 12px 10px 34px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 12px 12px 12px 36px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             background: var(--bg-input);
             color: var(--text-main);
-            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
         }
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px var(--gold-glow);
-            background: rgba(255,255,255,0.08);
-        }
-        .input-group input::placeholder { color: var(--text-dim); }
 
         .btn-primary {
-            padding: 10px 24px;
+            padding: 12px 24px;
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             border: none;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: #0f0f1a;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 6px;
             white-space: nowrap;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-        }
-        .btn-primary:active { transform: translateY(0); }
 
-        .links-container {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 20px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
         .links-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
             flex-wrap: wrap;
             gap: 10px;
         }
-        .links-title {
-            font-size: 0.95rem;
-            color: var(--gold);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .links-header .links-title { margin-bottom: 0; }
 
-        /* Barra de teclas de rolagem e navegação */
         .scroll-controls {
             display: flex;
             align-items: center;
@@ -318,124 +296,91 @@
             flex-wrap: wrap;
         }
         .scroll-btn {
-            background: rgba(212, 175, 55, 0.12);
+            background: rgba(212, 175, 55, 0.15);
             border: 1px solid rgba(212, 175, 55, 0.35);
             color: var(--gold-light);
             border-radius: 8px;
-            padding: 6px 11px;
+            padding: 8px 12px;
             font-size: 0.85rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
-            transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            user-select: none;
         }
         .scroll-btn:hover {
             background: var(--gold);
             color: #0f0f1a;
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
-        .scroll-btn:active {
-            transform: scale(0.95);
         }
 
         .links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 16px;
-            max-height: 60vh;
-            overflow-y: scroll; /* Força a exibição permanente da barra de rolagem */
-            padding: 8px 10px 8px 4px;
-            scrollbar-width: auto; /* Para navegadores Firefox */
+            max-height: 62vh;
+            overflow-y: auto;
+            padding: 10px;
+            scrollbar-width: auto;
             scrollbar-color: var(--gold) rgba(15, 15, 26, 0.8);
             scroll-behavior: smooth;
         }
-        /* Barra de rolagem grossa e altamente acessível (Webkit / Chrome / Edge / Android) */
-        .links-grid::-webkit-scrollbar {
-            width: 18px;
-        }
-        .links-grid::-webkit-scrollbar-track {
-            background: rgba(15, 15, 26, 0.9);
-            border-radius: 9px;
-            border: 2px solid rgba(212, 175, 55, 0.1);
-        }
+        .links-grid::-webkit-scrollbar { width: 16px; }
+        .links-grid::-webkit-scrollbar-track { background: rgba(15, 15, 26, 0.9); border-radius: 8px; }
         .links-grid::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-            border-radius: 9px;
-            border: 3px solid rgba(15, 15, 26, 0.9);
-        }
-        .links-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--gold-light);
+            border-radius: 8px;
         }
 
         .icon-card {
-            background: rgba(20, 20, 35, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: rgba(20, 20, 35, 0.75);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: var(--radius-sm);
-            padding: 16px 10px 12px 10px;
+            padding: 18px 10px 14px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.2s ease;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
         .icon-card:hover {
             background: var(--bg-card-hover);
             border-color: var(--gold);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4), var(--shadow-gold);
+            transform: translateY(-4px);
         }
 
         .icon-favicon {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+            background: rgba(212, 175, 55, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.25);
         }
-        .icon-card:hover .icon-favicon {
-            transform: scale(1.1);
-            border-color: var(--gold);
-        }
-        .icon-favicon i {
-            color: var(--gold);
-            font-size: 1.4rem;
-        }
-        .icon-favicon img {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            object-fit: contain;
-        }
+        .icon-favicon svg { width: 28px; height: 28px; }
+        .icon-favicon img { width: 30px; height: 30px; border-radius: 6px; object-fit: contain; }
 
         .icon-name {
             color: var(--text-main);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             width: 100%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
         .icon-url {
             color: var(--text-dim);
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             width: 100%;
             white-space: nowrap;
             overflow: hidden;
@@ -447,18 +392,18 @@
             top: 6px;
             right: 6px;
             display: flex;
-            gap: 2px;
+            gap: 4px;
             opacity: 0;
             transition: opacity 0.2s ease;
-            background: rgba(15, 15, 26, 0.9);
+            background: rgba(15, 15, 26, 0.92);
             border-radius: 6px;
-            padding: 2px;
+            padding: 3px;
             border: 1px solid var(--border);
         }
         .icon-card:hover .icon-actions { opacity: 1; }
 
         .btn-icon-sm {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             border-radius: 4px;
             border: none;
             background: transparent;
@@ -467,17 +412,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            transition: all 0.2s ease;
+            font-size: 0.8rem;
         }
-        .btn-icon-sm:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--gold);
-        }
-        .btn-icon-sm.delete:hover {
-            background: rgba(231, 76, 60, 0.2);
-            color: var(--danger);
-        }
+        .btn-icon-sm:hover { background: rgba(255,255,255,0.12); color: var(--gold); }
+        .btn-icon-sm.delete:hover { background: rgba(231, 76, 60, 0.25); color: var(--danger); }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -485,23 +423,8 @@
             padding: 40px 20px;
             color: var(--text-dim);
         }
-        .empty-state i {
-            font-size: 2.5rem;
-            color: var(--border);
-            margin-bottom: 12px;
-        }
-        .empty-state p {
-            font-size: 0.9rem;
-        }
+        .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; }
 
-        .backup-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 20px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-        }
         .backup-header {
             display: flex;
             justify-content: space-between;
@@ -510,117 +433,70 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .backup-title {
-            font-size: 0.9rem;
-            color: var(--gold);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .backup-header .backup-title { margin-bottom: 0; }
+
         .backup-status {
-            font-size: 0.75rem;
-            padding: 4px 10px;
+            font-size: 0.8rem;
+            padding: 4px 12px;
             border-radius: 20px;
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(46, 204, 113, 0.12);
             color: var(--success);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
-        .backup-status.offline {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--danger);
-        }
+        .backup-status.offline { background: rgba(231, 76, 60, 0.12); color: var(--danger); }
 
-        .backup-input-group {
-            position: relative;
-            margin-bottom: 12px;
-        }
+        .backup-input-group { position: relative; margin-bottom: 12px; }
         .backup-input-group textarea {
             width: 100%;
-            height: 50px;
-            padding: 10px 40px 10px 12px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            height: 52px;
+            padding: 12px 44px 12px 12px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: var(--radius-sm);
             background: var(--bg-input);
             color: var(--text-main);
             resize: none;
             font-family: 'Inter', monospace;
-            transition: all 0.3s ease;
-        }
-        .backup-input-group textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px var(--gold-glow);
         }
         .backup-input-group .copy-btn {
             position: absolute;
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            width: 28px; height: 28px;
+            width: 32px; height: 32px;
             border-radius: 6px;
             border: none;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.1);
             color: var(--text-muted);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-        .backup-input-group .copy-btn:hover {
-            background: rgba(212, 175, 55, 0.2);
-            color: var(--gold);
         }
 
-        .backup-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .backup-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
         .btn-action {
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             border: 1px solid var(--border);
             cursor: pointer;
             background: var(--bg-input);
             color: var(--text-muted);
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-weight: 500;
-        }
-        .btn-action:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: rgba(212, 175, 55, 0.08);
+            gap: 6px;
+            font-weight: 600;
         }
         .btn-action.primary {
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             color: #0f0f1a;
             border: none;
-            font-weight: 600;
         }
-        .btn-action.primary:hover {
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transform: translateY(-1px);
-        }
-        .btn-action.danger {
-            border-color: rgba(231, 76, 60, 0.3);
-            color: var(--danger);
-        }
-        .btn-action.danger:hover {
-            background: rgba(231, 76, 60, 0.1);
-            border-color: var(--danger);
-        }
+        .btn-action.danger { border-color: rgba(231, 76, 60, 0.4); color: var(--danger); }
 
-        /* Painel Flutuante de Teclas de Rolagem Rápida da Página */
         .floating-scroll-pad {
             position: fixed;
             bottom: 18px;
@@ -629,34 +505,24 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            background: rgba(15, 15, 26, 0.9);
+            background: rgba(15, 15, 26, 0.92);
             padding: 8px;
             border-radius: 14px;
             border: 1px solid var(--gold);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), var(--shadow-gold);
-            backdrop-filter: blur(8px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
         }
         .floating-scroll-btn {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             border: 1px solid rgba(212, 175, 55, 0.35);
-            background: rgba(212, 175, 55, 0.14);
+            background: rgba(212, 175, 55, 0.16);
             color: var(--gold-light);
             font-size: 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .floating-scroll-btn:hover {
-            background: var(--gold);
-            color: #0f0f1a;
-            transform: scale(1.06);
-        }
-        .floating-scroll-btn:active {
-            transform: scale(0.94);
         }
 
         .toast-container {
@@ -677,18 +543,8 @@
             align-items: center;
             gap: 10px;
             box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             max-width: 320px;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; transform: translateX(20px); }
-        }
-        .toast i { font-size: 1rem; }
         .toast.success i { color: var(--success); }
         .toast.error i { color: var(--danger); }
         .toast.info i { color: var(--gold); }
@@ -697,100 +553,70 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 999;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal {
             background: var(--bg-card);
             border-radius: var(--radius);
             padding: 24px;
-            max-width: 360px;
+            max-width: 380px;
             width: 90%;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+            border: 1px solid var(--gold);
         }
-        .modal-overlay.active .modal { transform: scale(1); }
-        .modal-title {
-            font-size: 1.1rem;
-            color: var(--text-main);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .modal-text {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
+        .modal-title { font-size: 1.1rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; }
+        .modal-text { font-size: 0.95rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.5; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
 
         .footer {
             text-align: center;
-            margin-top: 24px;
-            padding: 16px;
+            margin-top: 20px;
+            padding: 12px;
             color: var(--text-dim);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         .footer i { color: var(--danger); }
 
         @media (max-width: 480px) {
-            h1 { font-size: 1.6rem; }
-            .profile-img { width: 70px; height: 70px; }
-            .profile-ring { width: 82px; height: 82px; top: -6px; left: -6px; }
+            h1 { font-size: 1.7rem; }
             .input-group { flex-direction: column; }
-            .input-wrapper { min-width: 100%; }
             .btn-primary { width: 100%; justify-content: center; }
             .icon-actions { opacity: 1; }
-            .links-grid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
-            .backup-buttons { justify-content: center; }
-            .backup-buttons .btn-action { flex: 1; justify-content: center; }
-            .floating-scroll-pad { bottom: 12px; right: 12px; padding: 6px; }
-            .floating-scroll-btn { width: 38px; height: 38px; }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            .links-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
         }
     </style>
 </head>
-<body>
-    <div class="particles" id="particles"></div>
+<body class="highlight-enabled">
+    <!-- CURSOR VIRTUAL DESENHADO NA TELA (APARECE EM QUALQUER TV) -->
+    <div id="tvVirtualCursor" aria-hidden="true">
+        <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 3 L31 17 L18 20 L13 33 Z" fill="#FFD700" stroke="#0f0f1a" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="5" cy="3" r="3" fill="#ffffff"/>
+        </svg>
+    </div>
 
+    <div class="particles" id="particles"></div>
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Teclas Flutuantes de Rolagem Geral da Página -->
     <div class="floating-scroll-pad" title="Teclas de Rolagem da Página">
-        <button class="floating-scroll-btn" onclick="scrollPage('top')" title="Ir para o Topo da Página" aria-label="Topo da Página">
+        <button class="floating-scroll-btn tv-focusable" onclick="scrollPage('top')" title="Ir para o Topo da Página" aria-label="Topo da Página">
             <i class="fas fa-angle-double-up"></i>
         </button>
-        <button class="floating-scroll-btn" onclick="scrollPage('up')" title="Rolar Página para Cima" aria-label="Rolar Página para Cima">
+        <button class="floating-scroll-btn tv-focusable" onclick="scrollPage('up')" title="Rolar Página para Cima" aria-label="Rolar Página para Cima">
             <i class="fas fa-chevron-up"></i>
         </button>
-        <button class="floating-scroll-btn" onclick="scrollPage('down')" title="Rolar Página para Baixo" aria-label="Rolar Página para Baixo">
+        <button class="floating-scroll-btn tv-focusable" onclick="scrollPage('down')" title="Rolar Página para Baixo" aria-label="Rolar Página para Baixo">
             <i class="fas fa-chevron-down"></i>
         </button>
-        <button class="floating-scroll-btn" onclick="scrollPage('bottom')" title="Ir para o Final da Página" aria-label="Final da Página">
+        <button class="floating-scroll-btn tv-focusable" onclick="scrollPage('bottom')" title="Ir para o Final da Página" aria-label="Final da Página">
             <i class="fas fa-angle-double-down"></i>
         </button>
     </div>
@@ -800,16 +626,22 @@
             <div class="modal-title" id="modalTitle">Confirmar</div>
             <div class="modal-text" id="modalText">Tem certeza?</div>
             <div class="modal-buttons">
-                <button class="btn-action" onclick="closeModal()">Cancelar</button>
-                <button class="btn-action danger" id="modalConfirmBtn">Confirmar</button>
+                <button class="btn-action tv-focusable" id="modalCancelBtn" onclick="closeModal()">Cancelar</button>
+                <button class="btn-action danger tv-focusable" id="modalConfirmBtn">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <header class="header fade-in">
+    <header class="header">
         <div class="profile-wrapper">
             <div class="profile-ring"></div>
-            <img src="https://i.ibb.co/n8Dvmqbr/photo-1738003366938-d5af91b55f36.jpg" alt="Foto de Helenio" class="profile-img">
+            <!-- ÍCONE SVG EMBUTIDO PRINCIPAL -->
+            <div class="app-emblem" title="Ícone Sites Preferidos Helenio">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="32" r="26" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-dasharray="6 4"/>
+                    <polygon points="32,12 38,25 52,27 42,37 45,51 32,44 19,51 22,37 12,27 26,25" fill="#FFD700" stroke="#0f0f1a" stroke-width="1.5"/>
+                </svg>
+            </div>
         </div>
         <h1>Sites Preferidos Helenio</h1>
         <p class="subtitle">Seus links favoritos, sempre a mão</p>
@@ -819,15 +651,15 @@
                 <i class="fas fa-eye"></i>
                 <span>Visitantes: <strong id="visitorCount">0</strong></span>
             </div>
-            <button id="cursorToggleBtn" class="cursor-toggle-btn" onclick="toggleCursorMode()" title="Alternar Cursor Dourado de Alta Visibilidade e Navegação">
-                <i class="fas fa-mouse-pointer"></i>
-                <span id="cursorModeLabel">Cursor: Padrão</span>
+            <button id="cursorToggleBtn" class="cursor-toggle-btn active tv-focusable" onclick="cycleCursorMode()" title="Alternar modo de cursor e destaque na tela da TV">
+                <i class="fas fa-location-arrow"></i>
+                <span id="cursorModeLabel">Cursor TV: Seta + Foco</span>
             </button>
         </div>
     </header>
 
     <main class="container">
-        <div class="form-card fade-in">
+        <div class="form-card">
             <div class="form-title">
                 <i class="fas fa-plus-circle"></i>
                 <span id="formTitleText">Adicionar Novo Link</span>
@@ -835,50 +667,40 @@
             <div class="input-group">
                 <div class="input-wrapper">
                     <i class="fas fa-tag"></i>
-                    <input type="text" id="siteName" placeholder="Nome do site" onkeypress="handleEnter(event)">
+                    <input type="text" id="siteName" class="tv-focusable" placeholder="Nome do site" onkeypress="handleEnter(event)">
                 </div>
                 <div class="input-wrapper">
                     <i class="fas fa-link"></i>
-                    <input type="text" id="siteUrl" placeholder="URL do site" onkeypress="handleEnter(event)">
+                    <input type="text" id="siteUrl" class="tv-focusable" placeholder="URL do site" onkeypress="handleEnter(event)">
                 </div>
-                <button onclick="saveLink()" class="btn-primary" id="saveBtn">
+                <button onclick="saveLink()" class="btn-primary tv-focusable" id="saveBtn">
                     <i class="fas fa-save"></i>
                     <span id="saveBtnText">Salvar</span>
                 </button>
-                <button onclick="cancelEdit()" class="btn-action" id="cancelBtn" style="display:none;">
+                <button onclick="cancelEdit()" class="btn-action tv-focusable" id="cancelBtn" style="display:none;">
                     <i class="fas fa-times"></i>
                     Cancelar
                 </button>
             </div>
         </div>
 
-        <div class="links-container fade-in">
+        <div class="links-container">
             <div class="links-header">
                 <div class="links-title">
                     <i class="fas fa-th-large"></i>
                     Meus Links
                 </div>
-                <!-- Teclas de Rolagem e Seleção de Cursor na Lista -->
                 <div class="scroll-controls" role="toolbar" aria-label="Teclas de rolagem dos links">
-                    <button class="scroll-btn" onclick="moveCursorFocus(-1)" title="Item Anterior (Seta Esquerda/Cima)">
-                        <i class="fas fa-step-backward"></i>
-                    </button>
-                    <button class="scroll-btn" onclick="moveCursorFocus(1)" title="Próximo Item (Seta Direita/Baixo)">
-                        <i class="fas fa-step-forward"></i>
-                    </button>
-                    <button class="scroll-btn" onclick="openFocusedLink()" title="Abrir Item Selecionado (Enter)">
-                        <i class="fas fa-external-link-alt"></i> Abrir
-                    </button>
-                    <button class="scroll-btn" onclick="scrollGrid('top')" title="Rolar Lista ao Topo">
+                    <button class="scroll-btn tv-focusable" onclick="scrollGrid('top')" title="Rolar Lista ao Topo">
                         <i class="fas fa-angle-double-up"></i>
                     </button>
-                    <button class="scroll-btn" onclick="scrollGrid('up')" title="Rolar Lista para Cima">
+                    <button class="scroll-btn tv-focusable" onclick="scrollGrid('up')" title="Rolar Lista para Cima">
                         <i class="fas fa-arrow-up"></i> Subir
                     </button>
-                    <button class="scroll-btn" onclick="scrollGrid('down')" title="Rolar Lista para Baixo">
+                    <button class="scroll-btn tv-focusable" onclick="scrollGrid('down')" title="Rolar Lista para Baixo">
                         <i class="fas fa-arrow-down"></i> Descer
                     </button>
-                    <button class="scroll-btn" onclick="scrollGrid('bottom')" title="Rolar Lista ao Final">
+                    <button class="scroll-btn tv-focusable" onclick="scrollGrid('bottom')" title="Rolar Lista ao Final">
                         <i class="fas fa-angle-double-down"></i>
                     </button>
                 </div>
@@ -886,7 +708,7 @@
             <div id="linksGrid" class="links-grid"></div>
         </div>
 
-        <div class="backup-card fade-in">
+        <div class="backup-card">
             <div class="backup-header">
                 <div class="backup-title">
                     <i class="fas fa-cloud"></i>
@@ -897,184 +719,327 @@
                 </span>
             </div>
             <div class="backup-input-group">
-                <textarea id="backupCode" placeholder="Cole o código de backup ou ID da nuvem aqui..."></textarea>
-                <button class="copy-btn" onclick="copyBackupCode()" title="Copiar">
+                <textarea id="backupCode" class="tv-focusable" placeholder="Cole o código de backup ou ID da nuvem aqui..."></textarea>
+                <button class="copy-btn tv-focusable" onclick="copyBackupCode()" title="Copiar">
                     <i class="fas fa-copy"></i>
                 </button>
             </div>
             <div class="backup-buttons">
-                <button class="btn-action" onclick="generateBackup()">
+                <button class="btn-action tv-focusable" onclick="generateBackup()">
                     <i class="fas fa-download"></i> Gerar Local
                 </button>
-                <button class="btn-action" onclick="restoreBackup()">
+                <button class="btn-action tv-focusable" onclick="restoreBackup()">
                     <i class="fas fa-upload"></i> Restaurar Local
                 </button>
-                <button class="btn-action primary" onclick="uploadToCloud()">
+                <button class="btn-action primary tv-focusable" onclick="uploadToCloud()">
                     <i class="fas fa-cloud-upload-alt"></i> Enviar Nuvem
                 </button>
-                <button class="btn-action primary" onclick="downloadFromCloud()">
+                <button class="btn-action primary tv-focusable" onclick="downloadFromCloud()">
                     <i class="fas fa-cloud-download-alt"></i> Baixar Nuvem
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="footer fade-in">
+    <footer class="footer">
         <p>Feito com <i class="fas fa-heart"></i> para Helenio</p>
     </footer>
 
     <script>
         let links = JSON.parse(localStorage.getItem('helenio_links')) || [];
         let editIndex = -1;
-        let focusedLinkIndex = -1;
+        // Modos: 'both' (Seta + Foco), 'focus' (Só Destaque), 'off' (Desligado)
+        let cursorMode = 'both';
+        let currentFocusedElement = null;
 
         const apiKey = "$2a$10$6LWQS4dq3RipfxlyxlslGOjq9m7nMU16KhyTda/WVJo3IJdDHqXRa";
         const accessKey = "$2a$10$aYr1XrR5N.6GChZPrzPn3uXL8PLlNVja0dWs4JCUWm7ynfGtO33tm";
         const defaultBinId = "6a792b99da38895dfecf0ede";
         const binStorageKey = "helenio_jsonbin_id";
-        const cursorModeKey = "helenio_cursor_mode";
-
+        const cursorModeKey = "helenio_tv_cursor_mode_v2";
         const visitorCountKey = "helenio_visitor_count";
+
+        const FALLBACK_LINK_SVG = `
+            <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#D4AF37" stroke-width="2.4"/>
+                <ellipse cx="18" cy="18" rx="6.5" ry="14" fill="none" stroke="#F5E7B2" stroke-width="1.8"/>
+                <line x1="4" y1="18" x2="32" y2="18" stroke="#D4AF37" stroke-width="1.8"/>
+            </svg>
+        `;
 
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
             initCursorMode();
             atualizarTudo();
             atualizarContadorVisitantes();
-            setupKeyboardNavigation();
+            setupRemoteControlNavigation();
 
             const inicialId = localStorage.getItem(binStorageKey) || defaultBinId;
             if (inicialId && isValidBinId(inicialId.trim())) {
                 document.getElementById('backupCode').value = inicialId.trim();
             }
+
+            setTimeout(() => {
+                const firstCard = document.querySelector('#linksGrid .icon-card');
+                const firstFocusable = firstCard || document.querySelector('.tv-focusable');
+                if (firstFocusable) {
+                    setTvFocus(firstFocusable);
+                }
+            }, 250);
         });
 
-        /* Gerenciamento da Opção de Cursor */
+        /* =========================================================
+           CURSOR VIRTUAL NA TELA + NAVEGAÇÃO ESPACIAL PARA CONTROLE TV
+           ========================================================= */
         function initCursorMode() {
-            const savedMode = localStorage.getItem(cursorModeKey);
-            if (savedMode === 'gold') {
-                applyCursorMode(true);
+            const saved = localStorage.getItem(cursorModeKey);
+            if (saved === 'focus' || saved === 'off' || saved === 'both') {
+                cursorMode = saved;
             }
+            applyCursorModeUI();
         }
 
-        function toggleCursorMode() {
-            const isCurrentlyGold = document.body.classList.contains('custom-cursor-active');
-            const nextState = !isCurrentlyGold;
-            applyCursorMode(nextState);
-            localStorage.setItem(cursorModeKey, nextState ? 'gold' : 'default');
-            showToast(nextState ? 'Cursor Dourado (Alta Visibilidade) ativado!' : 'Cursor Padrão restaurado!', 'info');
+        function cycleCursorMode() {
+            if (cursorMode === 'both') cursorMode = 'focus';
+            else if (cursorMode === 'focus') cursorMode = 'off';
+            else cursorMode = 'both';
+
+            localStorage.setItem(cursorModeKey, cursorMode);
+            applyCursorModeUI();
+
+            if (cursorMode === 'both' && currentFocusedElement) {
+                moveVirtualCursorToElement(currentFocusedElement);
+            }
+
+            const messages = {
+                both: 'Modo Seta Dourada + Destaque ativado!',
+                focus: 'Modo Só Destaque ativado (sem seta flutuante).',
+                off: 'Cursor e destaque desligados.'
+            };
+            showToast(messages[cursorMode], 'info');
         }
 
-        function applyCursorMode(enableGold) {
+        function applyCursorModeUI() {
+            const cursorEl = document.getElementById('tvVirtualCursor');
             const btn = document.getElementById('cursorToggleBtn');
             const label = document.getElementById('cursorModeLabel');
-            if (enableGold) {
-                document.body.classList.add('custom-cursor-active');
+
+            if (cursorMode === 'both') {
+                cursorEl.classList.remove('hidden');
+                document.body.classList.add('highlight-enabled');
                 btn.classList.add('active');
-                label.textContent = 'Cursor: Dourado';
+                label.textContent = 'Cursor TV: Seta + Foco';
+            } else if (cursorMode === 'focus') {
+                cursorEl.classList.add('hidden');
+                document.body.classList.add('highlight-enabled');
+                btn.classList.add('active');
+                label.textContent = 'Cursor TV: Só Foco';
             } else {
-                document.body.classList.remove('custom-cursor-active');
+                cursorEl.classList.add('hidden');
+                document.body.classList.remove('highlight-enabled');
                 btn.classList.remove('active');
-                label.textContent = 'Cursor: Padrão';
+                label.textContent = 'Cursor TV: Off';
             }
         }
 
-        /* Funções das Teclas de Rolagem */
+        function moveVirtualCursorToElement(el) {
+            if (!el || cursorMode !== 'both') return;
+            const cursorEl = document.getElementById('tvVirtualCursor');
+            const rect = el.getBoundingClientRect();
+            if (rect.width === 0 && rect.height === 0) return;
+
+            const targetX = Math.min(window.innerWidth - 24, Math.max(8, rect.left + rect.width * 0.55));
+            const targetY = Math.min(window.innerHeight - 24, Math.max(8, rect.top + rect.height * 0.55));
+
+            cursorEl.style.left = targetX + 'px';
+            cursorEl.style.top = targetY + 'px';
+        }
+
+        function setTvFocus(el) {
+            if (!el) return;
+            if (currentFocusedElement && currentFocusedElement !== el) {
+                currentFocusedElement.classList.remove('tv-focused');
+            }
+            currentFocusedElement = el;
+            el.classList.add('tv-focused');
+            el.focus({ preventScroll: true });
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+            moveVirtualCursorToElement(el);
+            setTimeout(() => moveVirtualCursorToElement(el), 220);
+        }
+
+        function getVisibleFocusables() {
+            const modalOpen = document.getElementById('confirmModal').classList.contains('active');
+            const root = modalOpen ? document.getElementById('confirmModal') : document;
+            const all = Array.from(root.querySelectorAll('.tv-focusable'));
+            return all.filter(el => {
+                if (el.disabled) return false;
+                const style = window.getComputedStyle(el);
+                if (style.display === 'none' || style.visibility === 'hidden') return false;
+                const rect = el.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0;
+            });
+        }
+
+        function findNextElementInDirection(current, direction) {
+            const candidates = getVisibleFocusables().filter(el => el !== current);
+            if (candidates.length === 0) return null;
+
+            const cRect = current.getBoundingClientRect();
+            const cx = cRect.left + cRect.width / 2;
+            const cy = cRect.top + cRect.height / 2;
+
+            let bestEl = null;
+            let bestScore = Infinity;
+
+            candidates.forEach(el => {
+                const r = el.getBoundingClientRect();
+                const ex = r.left + r.width / 2;
+                const ey = r.top + r.height / 2;
+                const dx = ex - cx;
+                const dy = ey - cy;
+
+                let isValidDir = false;
+                let primaryDist = 0;
+                let secondaryDist = 0;
+
+                if (direction === 'RIGHT' && dx > 10) {
+                    isValidDir = true;
+                    primaryDist = dx;
+                    secondaryDist = Math.abs(dy) * 2.5;
+                } else if (direction === 'LEFT' && dx < -10) {
+                    isValidDir = true;
+                    primaryDist = Math.abs(dx);
+                    secondaryDist = Math.abs(dy) * 2.5;
+                } else if (direction === 'DOWN' && dy > 10) {
+                    isValidDir = true;
+                    primaryDist = dy;
+                    secondaryDist = Math.abs(dx) * 1.8;
+                } else if (direction === 'UP' && dy < -10) {
+                    isValidDir = true;
+                    primaryDist = Math.abs(dy);
+                    secondaryDist = Math.abs(dx) * 1.8;
+                }
+
+                if (isValidDir) {
+                    const score = primaryDist + secondaryDist;
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestEl = el;
+                    }
+                }
+            });
+
+            return bestEl;
+        }
+
+        function setupRemoteControlNavigation() {
+            document.addEventListener('mousemove', (e) => {
+                if (cursorMode !== 'both') return;
+                const cursorEl = document.getElementById('tvVirtualCursor');
+                cursorEl.style.left = e.clientX + 'px';
+                cursorEl.style.top = e.clientY + 'px';
+            });
+
+            window.addEventListener('scroll', () => {
+                if (currentFocusedElement) moveVirtualCursorToElement(currentFocusedElement);
+            }, { passive: true });
+
+            document.getElementById('linksGrid').addEventListener('scroll', () => {
+                if (currentFocusedElement) moveVirtualCursorToElement(currentFocusedElement);
+            }, { passive: true });
+
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                const code = e.keyCode || e.which;
+                const active = document.activeElement;
+                const isTextEditing = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+
+                if (isTextEditing) {
+                    if (key === 'ArrowDown' || code === 20) {
+                        e.preventDefault();
+                        const next = findNextElementInDirection(active, 'DOWN');
+                        if (next) setTvFocus(next);
+                    } else if (key === 'ArrowUp' || code === 19) {
+                        e.preventDefault();
+                        const next = findNextElementInDirection(active, 'UP');
+                        if (next) setTvFocus(next);
+                    }
+                    return;
+                }
+
+                let direction = null;
+                if (key === 'ArrowRight' || key === 'Right' || code === 22) direction = 'RIGHT';
+                else if (key === 'ArrowLeft' || key === 'Left' || code === 21) direction = 'LEFT';
+                else if (key === 'ArrowDown' || key === 'Down' || code === 20) direction = 'DOWN';
+                else if (key === 'ArrowUp' || key === 'Up' || code === 19) direction = 'UP';
+
+                if (direction) {
+                    e.preventDefault();
+                    if (!currentFocusedElement || !document.body.contains(currentFocusedElement)) {
+                        const first = getVisibleFocusables()[0];
+                        if (first) setTvFocus(first);
+                        return;
+                    }
+                    const nextEl = findNextElementInDirection(currentFocusedElement, direction);
+                    if (nextEl) {
+                        setTvFocus(nextEl);
+                    } else if (direction === 'DOWN') {
+                        scrollPage('down');
+                    } else if (direction === 'UP') {
+                        scrollPage('up');
+                    }
+                    return;
+                }
+
+                if (key === 'Enter' || key === ' ' || key === 'Select' || code === 23 || code === 66 || code === 13) {
+                    if (currentFocusedElement) {
+                        e.preventDefault();
+                        const cursorEl = document.getElementById('tvVirtualCursor');
+                        cursorEl.classList.add('clicking');
+                        setTimeout(() => cursorEl.classList.remove('clicking'), 150);
+                        currentFocusedElement.click();
+                    }
+                    return;
+                }
+
+                if (key === 'PageDown' || code === 93) {
+                    e.preventDefault();
+                    scrollGrid('down');
+                } else if (key === 'PageUp' || code === 92) {
+                    e.preventDefault();
+                    scrollGrid('up');
+                } else if (key === 'Escape' || key === 'Backspace' || code === 4) {
+                    const modal = document.getElementById('confirmModal');
+                    if (modal.classList.contains('active')) {
+                        e.preventDefault();
+                        closeModal();
+                    }
+                }
+            }, true);
+        }
+
+        /* =========================================================
+           ROLAGEM E FUNÇÕES DO APLICATIVO
+           ========================================================= */
         function scrollGrid(direction) {
             const grid = document.getElementById('linksGrid');
             if (!grid) return;
             const step = Math.max(180, grid.clientHeight * 0.65);
-            if (direction === 'up') {
-                grid.scrollBy({ top: -step, behavior: 'smooth' });
-            } else if (direction === 'down') {
-                grid.scrollBy({ top: step, behavior: 'smooth' });
-            } else if (direction === 'top') {
-                grid.scrollTo({ top: 0, behavior: 'smooth' });
-            } else if (direction === 'bottom') {
-                grid.scrollTo({ top: grid.scrollHeight, behavior: 'smooth' });
-            }
+            if (direction === 'up') grid.scrollBy({ top: -step, behavior: 'smooth' });
+            else if (direction === 'down') grid.scrollBy({ top: step, behavior: 'smooth' });
+            else if (direction === 'top') grid.scrollTo({ top: 0, behavior: 'smooth' });
+            else if (direction === 'bottom') grid.scrollTo({ top: grid.scrollHeight, behavior: 'smooth' });
         }
 
         function scrollPage(direction) {
             const step = Math.max(250, window.innerHeight * 0.65);
-            if (direction === 'up') {
-                window.scrollBy({ top: -step, behavior: 'smooth' });
-            } else if (direction === 'down') {
-                window.scrollBy({ top: step, behavior: 'smooth' });
-            } else if (direction === 'top') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else if (direction === 'bottom') {
-                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-            }
-        }
-
-        /* Navegação por Cursor/Seleção nos Cards */
-        function moveCursorFocus(delta) {
-            if (links.length === 0) return;
-            if (focusedLinkIndex === -1) {
-                focusedLinkIndex = delta > 0 ? 0 : links.length - 1;
-            } else {
-                focusedLinkIndex = (focusedLinkIndex + delta + links.length) % links.length;
-            }
-            updateFocusedCard();
-        }
-
-        function updateFocusedCard() {
-            const cards = document.querySelectorAll('#linksGrid .icon-card');
-            cards.forEach((card, idx) => {
-                if (idx === focusedLinkIndex) {
-                    card.classList.add('cursor-focused');
-                    card.focus({ preventScroll: true });
-                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                } else {
-                    card.classList.remove('cursor-focused');
-                }
-            });
-        }
-
-        function openFocusedLink() {
-            if (focusedLinkIndex >= 0 && focusedLinkIndex < links.length) {
-                openLink(links[focusedLinkIndex].url);
-            } else if (links.length > 0) {
-                focusedLinkIndex = 0;
-                updateFocusedCard();
-            }
-        }
-
-        function setupKeyboardNavigation() {
-            document.addEventListener('keydown', (e) => {
-                const tag = document.activeElement.tagName;
-                if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-
-                if (e.key === 'PageDown') {
-                    e.preventDefault();
-                    scrollGrid('down');
-                } else if (e.key === 'PageUp') {
-                    e.preventDefault();
-                    scrollGrid('up');
-                } else if (e.key === 'Home') {
-                    e.preventDefault();
-                    scrollGrid('top');
-                } else if (e.key === 'End') {
-                    e.preventDefault();
-                    scrollGrid('bottom');
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    moveCursorFocus(1);
-                } else if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    moveCursorFocus(-1);
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    scrollGrid('down');
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    scrollGrid('up');
-                } else if (e.key === 'Enter' && document.activeElement.classList.contains('icon-card')) {
-                    e.preventDefault();
-                    openFocusedLink();
-                }
-            });
+            if (direction === 'up') window.scrollBy({ top: -step, behavior: 'smooth' });
+            else if (direction === 'down') window.scrollBy({ top: step, behavior: 'smooth' });
+            else if (direction === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
+            else if (direction === 'bottom') window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
         }
 
         function atualizarContadorVisitantes() {
@@ -1086,7 +1051,7 @@
 
         function createParticles() {
             const container = document.getElementById('particles');
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + '%';
@@ -1116,10 +1081,13 @@
             document.getElementById('modalConfirmBtn').textContent = confirmText;
             modalCallback = callback;
             document.getElementById('confirmModal').classList.add('active');
+            setTimeout(() => setTvFocus(document.getElementById('modalCancelBtn')), 100);
         }
         function closeModal() {
             document.getElementById('confirmModal').classList.remove('active');
             modalCallback = null;
+            const first = getVisibleFocusables()[0];
+            if (first) setTvFocus(first);
         }
         document.getElementById('modalConfirmBtn').addEventListener('click', () => {
             if (modalCallback) modalCallback();
@@ -1167,42 +1135,34 @@
             const grid = document.getElementById('linksGrid');
 
             if (links.length === 0) {
-                focusedLinkIndex = -1;
                 grid.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-bookmark"></i>
+                        ${FALLBACK_LINK_SVG}
                         <p>Nenhum link salvo ainda</p>
                     </div>
                 `;
                 return;
             }
 
-            if (focusedLinkIndex >= links.length) {
-                focusedLinkIndex = links.length - 1;
-            }
-
             grid.innerHTML = '';
             links.forEach((link, index) => {
                 const favicon = getFaviconUrl(link.url);
                 const card = document.createElement('div');
-                card.className = 'icon-card' + (index === focusedLinkIndex ? ' cursor-focused' : '');
+                card.className = 'icon-card tv-focusable';
                 card.tabIndex = 0;
-                card.onmouseenter = () => {
-                    focusedLinkIndex = index;
-                    updateFocusedCard();
-                };
+                card.onmouseenter = () => setTvFocus(card);
                 card.onclick = () => openLink(link.url);
                 card.innerHTML = `
                     <div class="icon-actions">
-                        <button class="btn-icon-sm" onclick="event.stopPropagation(); editarLink(${index})" title="Editar">
+                        <button class="btn-icon-sm tv-focusable" onclick="event.stopPropagation(); editarLink(${index})" title="Editar">
                             <i class="fas fa-pen"></i>
                         </button>
-                        <button class="btn-icon-sm delete" onclick="event.stopPropagation(); confirmDelete(${index})" title="Excluir">
+                        <button class="btn-icon-sm delete tv-focusable" onclick="event.stopPropagation(); confirmDelete(${index})" title="Excluir">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                     <div class="icon-favicon">
-                        ${favicon ? `<img src="${favicon}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas fa-globe\'></i>'">` : '<i class="fas fa-globe"></i>'}
+                        ${favicon ? `<img src="${favicon}" alt="" onerror="this.parentElement.innerHTML = FALLBACK_LINK_SVG;">` : FALLBACK_LINK_SVG}
                     </div>
                     <div class="icon-name">${escapeHtml(link.name)}</div>
                     <div class="icon-url">${escapeHtml(getDomain(link.url))}</div>
@@ -1236,9 +1196,7 @@
                 return;
             }
 
-            const duplicateIndex = links.findIndex((l, i) => 
-                l.url === url && i !== editIndex
-            );
+            const duplicateIndex = links.findIndex((l, i) => l.url === url && i !== editIndex);
             if (duplicateIndex !== -1) {
                 showToast('Este link já existe!', 'error');
                 return;
@@ -1266,7 +1224,7 @@
             document.getElementById('formTitleText').textContent = 'Editar Link';
             document.getElementById('saveBtnText').textContent = 'Atualizar';
             document.getElementById('cancelBtn').style.display = 'flex';
-            document.getElementById('siteName').focus();
+            setTvFocus(document.getElementById('siteName'));
         }
 
         function cancelEdit() {
@@ -1311,7 +1269,7 @@
             }
             const code = btoa(JSON.stringify(links));
             document.getElementById('backupCode').value = code;
-            showToast('Código de backup gerado! Copie e guarde com segurança.');
+            showToast('Código de backup gerado!');
         }
 
         function restoreBackup() {
@@ -1347,7 +1305,7 @@
             }
             textarea.select();
             document.execCommand('copy');
-            showToast('Código copiado para a área de transferência!');
+            showToast('Código copiado!');
         }
 
         async function uploadToCloud() {
@@ -1412,7 +1370,7 @@
             if (!isValidBinId(binId)) {
                 backupStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> ID Inválido';
                 backupStatus.className = 'backup-status offline';
-                showToast('Insira um ID de Bin válido (24 caracteres hexadecimais)', 'error');
+                showToast('Insira um ID de Bin válido (24 caracteres)', 'error');
                 return;
             }
 
